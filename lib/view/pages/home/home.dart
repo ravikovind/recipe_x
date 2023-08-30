@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               context.goNamed(kFilterRoute);
             },
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.filter_alt_sharp),
           ),
         ],
       ),
@@ -1452,16 +1452,6 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-
-            /// Lottie Animation
-            /// assets\lotties\dinner.json
-            // Text(
-            //   'It\'s free and open source. you can find the source code on GitHub.',
-            //   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            // ),
-
             const SizedBox(
               height: 16,
             ),

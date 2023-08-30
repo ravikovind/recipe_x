@@ -546,13 +546,29 @@ class _FilterPageState extends State<FilterPage> {
                             ],
                           ),
                         ),
+
+                        /// choosiing one ingredient means it's vegan but recipe can have non-vegan ingredients
+                        ListTile(
+                          title: Text(
+                            'Choosiing one ingredient means it\'s vegan/veg/non-veg but recipe may have non-vegan/non-veg or veg/vegan ingredients, please check recipe details for more info!',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
+                                  letterSpacing: 2.4,
+                                  wordSpacing: 2.4,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                          ),
+                        ),
                       ],
                     ),
                   );
                 }),
               );
             },
-            icon: const Icon(Icons.filter_alt_outlined),
+            icon: const Icon(Icons.more),
           ),
         ],
       ),

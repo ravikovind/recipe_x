@@ -4,7 +4,7 @@ import 'package:recipe_x/view/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_x/view/pages/home/recipe.dart';
-import 'package:recipe_x/view/pages/search/filter.dart';
+import 'package:recipe_x/view/pages/filter/filter.dart';
 
 class AppRouter {
   AppRouter({
