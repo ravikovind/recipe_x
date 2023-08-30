@@ -19,6 +19,7 @@ class Country extends Equatable {
     this.emoji,
     this.unicode,
     this.image,
+    this.dial,
   });
 
   /// name of the country.
@@ -36,6 +37,9 @@ class Country extends Equatable {
   /// image of the country. it's svg url.
   final String? image;
 
+  /// dial code of the country.
+  final String? dial;
+
   /// factory constructor to create a Country instance from a json of [Map] of [String] keys and [dynamic] values.
   factory Country.fromJson(Map<String, dynamic> json) {
     return Country(
@@ -44,6 +48,7 @@ class Country extends Equatable {
       emoji: json['emoji']?.toString(),
       unicode: json['unicode']?.toString(),
       image: json['image']?.toString(),
+      dial: json['dial']?.toString(),
     );
   }
 
@@ -55,9 +60,10 @@ class Country extends Equatable {
       'emoji': emoji,
       'unicode': unicode,
       'image': image,
+      'dial': dial,
     };
   }
 
   @override
-  List<Object?> get props => [name, code, emoji, unicode, image];
+  List<Object?> get props => [name, code, emoji, unicode, image, dial];
 }

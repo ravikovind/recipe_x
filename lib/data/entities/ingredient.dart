@@ -70,12 +70,12 @@ class Ingredient extends Equatable {
   /// a method that converts an Ingredient instance into a json of [Map] of [String] keys and [dynamic] values.
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
+      '_id': {'\$oid': id},
       'name': name,
       'synonyms': synonyms,
       'compounds': compounds,
       'type': type,
-      'category': category,
+      'category': {'\$oid': category},
       'isVeg': isVeg,
       'isVegan': isVegan,
     };

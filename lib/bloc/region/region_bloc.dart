@@ -21,10 +21,11 @@ class RegionBloc extends HydratedBloc<RegionEvent, RegionState> {
       LoadRegions event, Emitter<RegionState> emit) async {
     emit(state.copyWith(busy: true));
     try {
-      final result = await service.regions();
+      var result = await service.regions();
       emit(
         state.copyWith(
-          regions: [...result],
+          regions: [...result]
+            ..sort((a, b) => b.popularity?.compareTo(a.popularity ?? 0) ?? 0),
           message: 'Regions Loaded Successfully',
         ),
       );

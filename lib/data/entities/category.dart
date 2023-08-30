@@ -67,7 +67,7 @@ class Category extends Equatable {
 
   /// fromJson that returns \[Category\] when a valid json is provided.
   static Category fromJson(Map<String, dynamic> json) => Category(
-        id: json['_id']['\$oid'],
+        id: json['_id']?['\$oid']?.toString(),
         name: json['name']?.toString(),
         types: List<String>.from(json['types']?.map((e) => '$e')),
         isVeg: json['isVeg']?.toString() == 'true',
@@ -79,7 +79,7 @@ class Category extends Equatable {
 
   /// toJson that returns \[Map<String, dynamic>\] when a valid \[Category\] is provided.
   Map<String, dynamic> toJson() => {
-        '_id': id,
+        '_id': {'\$oid': id},
         'name': name,
         'types': types,
         'isVeg': isVeg,

@@ -52,12 +52,12 @@ class Recipe extends Equatable {
   /// a method that converts a Recipe instance into a json of [Map] of [String] keys and [dynamic] values.
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
+      '_id': {'\$oid': id},
       'name': name,
       'description': description,
       'source': source,
-      'region': region,
-      'ingredients': ingredients,
+      'region': {'\$oid': region},
+      'ingredients': ingredients?.map((e) => {'\$oid': e}).toList(),
     };
   }
 

@@ -17,11 +17,20 @@ class CountryBloc extends Bloc<CountryEvent, CountryState> {
 
   final Service service;
 
-  FutureOr<void> _loadCountries(LoadCountries event, Emitter<CountryState> emit) async {
+  FutureOr<void> _loadCountries(
+      LoadCountries event, Emitter<CountryState> emit) async {
     emit(state.copyWith(busy: true));
     try {
       final countries = await service.countries();
-      emit(state.copyWith(countries: <Country>[...countries]));
+
+      /// sort countries by dial code. because dial less means more important.
+      emit(state.copyWith(countries: <Country>[
+        ...countries..sort((a, b) {
+          final aDial = int.tryParse('${a.dial}');
+          final bDial = int.tryParse('${b.dial}');
+          return aDial != null && bDial != null ? aDial.compareTo(bDial) : 0;
+        })
+      ]));
     } catch (e) {
       emit(state.copyWith(error: 'There was an error loading countries.'));
     } finally {

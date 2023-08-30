@@ -3,6 +3,8 @@ import 'package:recipe_x/debug/router_observer.dart';
 import 'package:recipe_x/view/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recipe_x/view/pages/home/recipe.dart';
+import 'package:recipe_x/view/pages/search/filter.dart';
 
 class AppRouter {
   AppRouter({
@@ -17,14 +19,31 @@ class AppRouter {
           name: kHomeRoute,
           builder: (context, state) => const HomePage(),
           routes: [
+            /// search route
             GoRoute(
-              path: kUpdateRoute,
-              name: kUpdateRoute,
-              builder: (context, state) => Scaffold(
-                appBar: AppBar(
-                  title: const Text('RecipeX'),
-                ),
-              ),
+              path: kFilterRoute,
+              name: kFilterRoute,
+              builder: (context, state) => const FilterPage(),
+            ),
+            GoRoute(
+              path: '$kRecipeRoute/:recipe',
+              name: kRecipeRoute,
+              redirect: (context, state) {
+                final recipe = state.pathParameters['recipe']?.toString();
+                if (recipe == null || recipe.isEmpty) {
+                  return kHomeRoute;
+                }
+                return null;
+              },
+              builder: (context, state) {
+                final recipe = state.pathParameters['recipe']?.toString();
+                if (recipe == null || recipe.isEmpty) {
+                  return state.noMatch;
+                }
+                return RecipePage(
+                  recipe: recipe,
+                );
+              },
             ),
           ],
         ),
@@ -35,4 +54,12 @@ class AppRouter {
   late final GoRouter _router;
   GoRouter get router => _router;
   final RouterObserver observer;
+}
+
+extension OfGoRouterState on GoRouterState {
+  Widget get noMatch => const Scaffold(
+        body: Center(
+          child: Text('I think you are lost!'),
+        ),
+      );
 }

@@ -4,6 +4,7 @@
       "$oid": "64bcc186557b67e9e20393ab"
     },
     "name": "Africa",
+    "popularity": 2,
     "countries": [
       "Algeria",
       "Egypt",
@@ -22,6 +23,7 @@
       "$oid": "64bcc186557b67e9e20393ac"
     },
     "name": "Australia & NZ",
+    "popularity": 2,
     "countries": [
       "Australia",
       "New Zealand",
@@ -33,6 +35,7 @@
       "$oid": "64bcc186557b67e9e20393ad"
     },
     "name": "Belgian",
+    "popularity": 2,
     "countries": [
       "Belgium"
     ]
@@ -42,6 +45,7 @@
       "$oid": "64bcc186557b67e9e20393ae"
     },
     "name": "British Isles",
+    "popularity": 3,
     "countries": [
       "United Kingdom",
       "Ireland"
@@ -52,6 +56,7 @@
       "$oid": "64bcc186557b67e9e20393af"
     },
     "name": "Canada",
+    "popularity": 3,
     "countries": [
       "Canada"
     ]
@@ -61,6 +66,7 @@
       "$oid": "64bcc186557b67e9e20393b0"
     },
     "name": "Caribbean",
+    "popularity": 1,
     "countries": [
       "Bahamas",
       "Jamaica",
@@ -79,6 +85,7 @@
       "$oid": "64bcc186557b67e9e20393b1"
     },
     "name": "Central America",
+    "popularity": 2,
     "countries": [
       "Belize",
       "Costa Rica",
@@ -94,8 +101,12 @@
       "$oid": "64bcc186557b67e9e20393b2"
     },
     "name": "China",
+    "popularity": 4,
     "countries": [
-      "People's Republic of China"
+      "People's Republic of China",
+      "Hong Kong",
+      "Macau",
+      "Republic of China ( Taiwan )"
     ]
   },
   {
@@ -103,6 +114,7 @@
       "$oid": "64bcc186557b67e9e20393b3"
     },
     "name": "DACH Countries",
+    "popularity": 3,
     "countries": [
       "Germany",
       "Austria",
@@ -114,6 +126,7 @@
       "$oid": "64bcc186557b67e9e20393b4"
     },
     "name": "Dutch",
+    "popularity": 2,
     "countries": [
       "Netherlands"
     ]
@@ -123,6 +136,7 @@
       "$oid": "64bcc186557b67e9e20393b5"
     },
     "name": "Eastern Europe",
+    "popularity": 3,
     "countries": [
       "Poland",
       "Hungary",
@@ -138,6 +152,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393b6"
     },
+    "popularity": 3,
     "name": "France",
     "countries": [
       "France"
@@ -148,6 +163,7 @@
       "$oid": "64bcc186557b67e9e20393b7"
     },
     "name": "Greece",
+    "popularity": 3,
     "countries": [
       "Greece"
     ]
@@ -157,6 +173,7 @@
       "$oid": "64bcc186557b67e9e20393b8"
     },
     "name": "Indian Subcontinent",
+    "popularity": 5,
     "countries": [
       "India",
       "Pakistan",
@@ -172,6 +189,7 @@
       "$oid": "64bcc186557b67e9e20393b9"
     },
     "name": "Italy",
+    "popularity": 4,
     "countries": [
       "Italy"
     ]
@@ -180,6 +198,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393ba"
     },
+    "popularity": 4,
     "name": "Japan",
     "countries": [
       "Japan"
@@ -189,6 +208,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393bb"
     },
+    "popularity": 4,
     "name": "Korea",
     "countries": [
       "South Korea",
@@ -199,6 +219,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393bc"
     },
+    "popularity": 3,
     "name": "Mexico",
     "countries": [
       "Mexico"
@@ -208,6 +229,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393bd"
     },
+    "popularity": 3,
     "name": "Middle East",
     "countries": [
       "Saudi Arabia",
@@ -226,6 +248,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393be"
     },
+    "popularity": 3,
     "name": "Portugal",
     "countries": [
       "Portugal"
@@ -236,6 +259,7 @@
       "$oid": "64bcc186557b67e9e20393bf"
     },
     "name": "Scandinavia",
+    "popularity": 3,
     "countries": [
       "Sweden",
       "Norway",
@@ -249,6 +273,7 @@
       "$oid": "64bcc186557b67e9e20393c0"
     },
     "name": "South America",
+    "popularity": 2,
     "countries": [
       "Brazil",
       "Argentina",
@@ -267,6 +292,7 @@
       "$oid": "64bcc186557b67e9e20393c1"
     },
     "name": "South East Asia",
+    "popularity": 3,
     "countries": [
       "Indonesia",
       "Thailand",
@@ -284,6 +310,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393c2"
     },
+    "popularity": 3,
     "name": "Spain",
     "countries": [
       "Spain"
@@ -293,6 +320,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393c3"
     },
+    "popularity": 3,
     "name": "Thailand",
     "countries": [
       "Thailand"
@@ -302,6 +330,7 @@
     "_id": {
       "$oid": "64bcc186557b67e9e20393c4"
     },
+    "popularity": 3,
     "name": "USA",
     "countries": [
       "United States of America"

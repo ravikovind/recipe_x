@@ -1,4 +1,6 @@
+import 'package:recipe_x/bloc/category/category_bloc.dart';
 import 'package:recipe_x/bloc/country/country_bloc.dart';
+import 'package:recipe_x/bloc/ingredient/ingredient_bloc.dart';
 import 'package:recipe_x/bloc/recipe/recipe_bloc.dart';
 import 'package:recipe_x/bloc/region/region_bloc.dart';
 import 'package:recipe_x/bloc/theme/theme_bloc.dart';
@@ -45,6 +47,24 @@ class Application extends StatelessWidget {
           create: (BuildContext context) => RecipeBloc(service: Service())
             ..add(
               const LoadRecipes(),
+            ),
+        ),
+
+        /// CategoryBloc
+        BlocProvider<CategoryBloc>(
+          create: (BuildContext context) => CategoryBloc(
+            service: Service(),
+          )..add(
+              const LoadCategories(),
+            ),
+        ),
+
+        /// IngredientBloc
+        BlocProvider<IngredientBloc>(
+          create: (BuildContext context) => IngredientBloc(
+            service: Service(),
+          )..add(
+              const LoadIngredients(),
             ),
         ),
       ],
