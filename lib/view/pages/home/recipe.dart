@@ -10,6 +10,7 @@ import 'package:recipe_x/data/entities/recipe.dart';
 
 import 'package:recipe_x/core/utils/extenstions.dart';
 import 'package:recipe_x/data/entities/region.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RecipePage extends StatelessWidget {
   const RecipePage({super.key, required this.recipe});
@@ -49,6 +50,30 @@ class RecipePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(recipeOf.name ?? 'Recipe'),
+
+        /// check out the recipe
+        actions: [
+          IconButton(
+            onPressed: () async {
+
+              final name = recipeOf.name?.replaceAll(' ', '+') ?? '';
+
+              final url = 'https://www.youtube.com/results?search_query=$name';
+
+              final uri = Uri.parse(url);
+
+              try {
+                await launchUrl(
+                  uri,
+                  mode: LaunchMode.externalApplication,
+                );
+              } catch (_) {
+                print(_);
+              }
+            },
+            icon:  Icon(Icons.play_arrow_rounded, color: Theme.of(context).colorScheme.error, size: 32,),
+          ),
+        ],
       ),
       body: ListView(
         children: [

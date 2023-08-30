@@ -1,6 +1,6 @@
 # recipe_x
 
-A new Flutter project.
+A application for recipes around the world.
 
 ## Getting Started
 
