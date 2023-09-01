@@ -68,6 +68,33 @@ class HomePage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
             ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                'It\'s free and open source.',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              subtitle: RichText(
+                text: TextSpan(
+                  text: 'Github Repository',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () async {
+                      final uri =
+                          Uri.parse('https://github.com/ravikovind/recipe_x');
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    },
+                ),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+            ),
 
             const SizedBox(
               height: 24,
@@ -97,7 +124,7 @@ class HomePage extends StatelessWidget {
                   },
                   title: Text(
                     recipe.name?.capitalizeAll ?? '',
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -767,7 +794,7 @@ class HomePage extends StatelessWidget {
                             recipe.name?.capitalizeAll ?? '',
                             style: Theme.of(context)
                                 .textTheme
-                                .displaySmall
+                                .headlineMedium
                                 ?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Theme.of(context).colorScheme.primary,
@@ -1168,10 +1195,12 @@ class HomePage extends StatelessWidget {
                                                                   height: 8,
                                                                   margin:
                                                                       const EdgeInsets
-                                                                          .all(2),
+                                                                          .all(
+                                                                          2),
                                                                   padding:
                                                                       const EdgeInsets
-                                                                          .all(2),
+                                                                          .all(
+                                                                          2),
                                                                   decoration:
                                                                       BoxDecoration(
                                                                     shape: BoxShape
