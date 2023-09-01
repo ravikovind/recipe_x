@@ -49,13 +49,12 @@ class RecipePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(recipeOf.name ?? 'Recipe'),
+        title: Text(recipeOf.name?.capitalize ?? 'Recipe', maxLines: 2,),
 
         /// check out the recipe
         actions: [
           IconButton(
             onPressed: () async {
-
               final name = recipeOf.name?.replaceAll(' ', '+') ?? '';
 
               final url = 'https://www.youtube.com/results?search_query=$name';
@@ -71,7 +70,11 @@ class RecipePage extends StatelessWidget {
                 print(_);
               }
             },
-            icon:  Icon(Icons.play_arrow_rounded, color: Theme.of(context).colorScheme.error, size: 32,),
+            icon: Icon(
+              Icons.play_arrow_rounded,
+              color: Theme.of(context).colorScheme.error,
+              size: 32,
+            ),
           ),
         ],
       ),

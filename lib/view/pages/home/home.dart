@@ -9,7 +9,6 @@ import 'package:recipe_x/bloc/ingredient/ingredient_bloc.dart';
 import 'package:recipe_x/bloc/recipe/recipe_bloc.dart';
 import 'package:recipe_x/bloc/region/region_bloc.dart';
 import 'package:recipe_x/core/routes/routes.dart';
-
 import 'package:recipe_x/core/utils/extenstions.dart';
 import 'package:recipe_x/data/entities/category.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -1419,6 +1418,66 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(
               height: 16,
+            ),
+
+            RichText(
+              text: TextSpan(
+                text: 'Main Data Source of RecipeX is : ',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                children: [
+                  TextSpan(
+                    text: 'https://cosylab.iiitd.edu.in/culinarydb/',
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        final uri = Uri.parse(
+                          'https://cosylab.iiitd.edu.in/culinarydb/',
+                        );
+
+                        try {
+                          launchUrl(uri);
+                        } catch (e) {
+                          throw 'There was an error trying to launch the URL: $uri';
+                        }
+                      },
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                  ),
+                  const TextSpan(
+                    text: '.\n',
+                  ),
+                  TextSpan(
+                    text:
+                        'using above data, we have created a database for RecipeX, you can find it here : ',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                  ),
+                  TextSpan(
+                    text: 'Get RecipeX Database',
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        final uri = Uri.parse(
+                          'mailto:ravikumar2710999@gmail.com?subject=Please%20Share%20RecipeX%20DB&body=Hey%20There!%0A%3CPlease%20write%20your%20reason%20here%3E',
+                        );
+                        try {
+                          launchUrl(uri);
+                        } catch (e) {
+                          throw 'There was an error trying to launch the URL: $uri';
+                        }
+                      },
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                ],
+              ),
             ),
 
             RichText(

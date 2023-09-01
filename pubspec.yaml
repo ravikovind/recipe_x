@@ -44,6 +44,7 @@ dependencies:
   response_x: ^1.0.2
   intl: ^0.18.1
   url_launcher: ^6.1.12
+  # http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
