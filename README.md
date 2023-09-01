@@ -2,15 +2,14 @@
 
 A application for recipes around the world.
 
-## Getting Started
+## Check it out
 
-This project is a starting point for a Flutter application.
+[RecipeX](https://ravikovind.github.io/recipe_x/)
 
-A few resources to get you started if this is your first Flutter project:
+## Run it locally
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Clone the repo
+2. Run `flutter run -d chrome --web-port=3000 --web-renderer html`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## About
+It is a simple application to search for recipes around the world. It uses 'https://cosylab.iiitd.edu.in/culinarydb/' as main data source.
