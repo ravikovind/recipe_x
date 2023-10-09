@@ -13,6 +13,8 @@ import 'package:recipe_x/core/utils/extenstions.dart';
 import 'package:recipe_x/data/entities/category.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -68,34 +70,6 @@ class HomePage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                'It\'s free and open source.',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              subtitle: RichText(
-                text: TextSpan(
-                  text: 'Github Repository',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () async {
-                      final uri =
-                          Uri.parse('https://github.com/ravikovind/recipe_x');
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      }
-                    },
-                ),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios),
-            ),
-
             const SizedBox(
               height: 24,
             ),
@@ -124,7 +98,7 @@ class HomePage extends StatelessWidget {
                   },
                   title: Text(
                     recipe.name?.capitalizeAll ?? '',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -794,7 +768,7 @@ class HomePage extends StatelessWidget {
                             recipe.name?.capitalizeAll ?? '',
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineMedium
+                                .headlineSmall
                                 ?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Theme.of(context).colorScheme.primary,
@@ -1543,6 +1517,70 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
+            ListTile(
+              title: Text(
+                'About',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => showAboutDialog(
+                context: context,
+                applicationName: 'RecipeX',
+                applicationVersion: '1.0.0',
+                applicationIcon: const FlutterLogo(),
+                applicationLegalese: '© 2021 Ravi Kovind',
+              ),
+            ),
+
+            /// liscence
+            ListTile(
+              title: Text(
+                'Liscence',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => showLicensePage(
+                context: context,
+                applicationName: 'RecipeX',
+                applicationVersion: '1.0.0',
+                applicationIcon: const FlutterLogo(),
+                applicationLegalese: '© 2021 Ravi Kovind',
+              ),
+            ),
+            if (!kIsWeb)
+              ListTile(
+                onTap: () async {
+                  final uri =
+                      Uri.parse('https://ravikovind.github.io/recipe_x/');
+                  try {
+                    launchUrl(uri);
+                  } catch (e) {
+                    throw 'There was an error trying to launch the URL: $uri';
+                  }
+                },
+                title: Text(
+                  'Website : https://ravikovind.github.io/recipe_x/',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                subtitle: RichText(
+                  text: TextSpan(
+                    text: 'Web version of RecipeX',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios),
+              ),
           ],
         ),
       ),

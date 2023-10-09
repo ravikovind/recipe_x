@@ -63,21 +63,6 @@ class _FilterPageState extends State<FilterPage> {
     final ingredients = context.watch<IngredientBloc>().state.ingredients;
     final categories = context.watch<CategoryBloc>().state.categories;
     final regions = context.watch<RegionBloc>().state.regions;
-    // final countries = context.watch<CountryBloc>().state.countries;
-    // final regionCountriesMap = <String, List<Country>>{};
-    // for (var region in regions) {
-    //   final regionCountries = countries
-    //       .where((country) =>
-    //           region.countries
-    //               ?.map((e) => e.toLowerCase())
-    //               .any((e) => e.contains(country.name?.toLowerCase() ?? '')) ==
-    //           true)
-    //       .toList();
-    //   regionCountriesMap[region.id ?? ''] = regionCountries;
-    // }
-    // final regionCountries = [
-    //   ...regionCountriesMap.values.expand((element) => element)
-    // ];
     /// veg ingredients only
     final veganIngredients =
         ingredients.where((element) => element.isVegan == true).toList();
@@ -149,72 +134,6 @@ class _FilterPageState extends State<FilterPage> {
                     ),
                     body: ListView(
                       children: [
-                        /// coutnries
-                        // ListTile(
-                        //   title: Text(
-                        //     'Countries',
-                        //     style: Theme.of(context)
-                        //         .textTheme
-                        //         .labelLarge
-                        //         ?.copyWith(
-                        //           letterSpacing: 2.4,
-                        //           wordSpacing: 2.4,
-                        //           fontWeight: FontWeight.bold,
-                        //         ),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 64,
-                        //   child: ListView(
-                        //     scrollDirection: Axis.horizontal,
-                        //     children: [
-                        //       ...regionCountries.map(
-                        //         (e) => Padding(
-                        //           padding: const EdgeInsets.all(4.0),
-                        //           child: ChoiceChip(
-                        //             selected:
-                        //                 selectedCountries.contains(e.name),
-                        //             onSelected: (value) {
-                        //               set(() {
-                        //                 if (selectedCountries
-                        //                     .contains(e.name ?? '')) {
-                        //                   selectedCountries.remove(e.name);
-                        //                 } else {
-                        //                   selectedCountries.add(e.name ?? '');
-                        //                 }
-                        //               });
-                        //               context.read<RecipeBloc>().add(
-                        //                     FilterRecipes(
-                        //                       query: search.text,
-                        //                       refresh: true,
-                        //                       regions: selectedRegions,
-                        //                       ingredients: selectedIngredients,
-                        //                     ),
-                        //                   );
-                        //             },
-                        //             backgroundColor:
-                        //                 Theme.of(context).colorScheme.surface,
-                        //             label: Text(
-                        //               '${e.name ?? ''} (${e.code ?? ''} - ${e.emoji ?? ''})',
-                        //               style: Theme.of(context)
-                        //                   .textTheme
-                        //                   .labelSmall
-                        //                   ?.copyWith(
-                        //                     letterSpacing: 2.4,
-                        //                     wordSpacing: 2.4,
-                        //                     fontWeight: FontWeight.bold,
-                        //                     color: Theme.of(context)
-                        //                         .colorScheme
-                        //                         .secondary,
-                        //                   ),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-
                         ListTile(
                           title: Text(
                             'Regions',
@@ -277,62 +196,6 @@ class _FilterPageState extends State<FilterPage> {
                             ],
                           ),
                         ),
-
-                        // ///  ingredients category
-                        // ListTile(
-                        //   title: Text(
-                        //     'Ingredients Category',
-                        //     style: Theme.of(context)
-                        //         .textTheme
-                        //         .labelLarge
-                        //         ?.copyWith(
-                        //           letterSpacing: 2.4,
-                        //           wordSpacing: 2.4,
-                        //           fontWeight: FontWeight.bold,
-                        //         ),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 64,
-                        //   child: ListView(
-                        //     scrollDirection: Axis.horizontal,
-                        //     children: [
-                        //       ...categories.map(
-                        //         (e) => Padding(
-                        //           padding: const EdgeInsets.all(4.0),
-                        //           child: ChoiceChip(
-                        //             selected: selectedCategories.contains(e.id),
-                        //             onSelected: (value) {
-                        //               set(() {
-                        //                 if (selectedCategories.contains(e.id)) {
-                        //                   selectedCategories.remove(e.id);
-                        //                 } else {
-                        //                   selectedCategories.add(e.id ?? '');
-                        //                 }
-                        //               });
-                        //             },
-                        //             backgroundColor:
-                        //                 Theme.of(context).colorScheme.surface,
-                        //             label: Text(
-                        //               e.name ?? '',
-                        //               style: Theme.of(context)
-                        //                   .textTheme
-                        //                   .labelSmall
-                        //                   ?.copyWith(
-                        //                     letterSpacing: 2.4,
-                        //                     wordSpacing: 2.4,
-                        //                     fontWeight: FontWeight.bold,
-                        //                     color: Theme.of(context)
-                        //                         .colorScheme
-                        //                         .primary,
-                        //                   ),
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
 
                         ListTile(
                           title: Text(

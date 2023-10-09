@@ -76,7 +76,7 @@ class Service {
   /// returns : a list of [Country]s.
   /// throws : [Exception] if Countries not found!
   /// source : https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json
-  
+
   Future<List<Country>> countries() async {
     try {
       final result = await foundation.compute(_computeCountries,

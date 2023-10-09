@@ -37,7 +37,8 @@ class RouterObserver extends NavigatorObserver {
   }
 
   @override
-  void didStartUserGesture(Route<dynamic> route, Route<dynamic>? previousRoute) {
+  void didStartUserGesture(
+      Route<dynamic> route, Route<dynamic>? previousRoute) {
     print(
       '\x1B[32m[Navigator] User started gesture to ${route.settings.name} and previous route was ${previousRoute?.settings.name}\x1B[0m',
     );
