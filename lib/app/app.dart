@@ -77,7 +77,7 @@ class Application extends StatelessWidget {
             theme: ThemeData(
               colorScheme: lightColorScheme,
               useMaterial3: true,
-              textTheme: GoogleFonts.urbanistTextTheme(
+              textTheme: GoogleFonts.nunitoSansTextTheme(
                 Theme.of(context).textTheme,
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(
@@ -97,7 +97,7 @@ class Application extends StatelessWidget {
             darkTheme: ThemeData.dark().copyWith(
               colorScheme: darkColorScheme,
               useMaterial3: true,
-              textTheme: GoogleFonts.urbanistTextTheme(
+              textTheme: GoogleFonts.nunitoSansTextTheme(
                 Theme.of(context).textTheme,
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(

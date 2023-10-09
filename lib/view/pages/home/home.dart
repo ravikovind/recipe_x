@@ -42,27 +42,31 @@ class HomePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            /// Recipe X : The Recipe App for Everyone
-            /// A simple, yet powerful recipe app for everyone.
-            /// A collection of 47,000+ recipes from around the world. along with their ingredients, country of origin, and region.
-            /// It's free and open source.
-            Text(
-              'RecipeX : The Recipe Application',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'RecipeX',
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                   ),
-            ),
-            const SizedBox(
-              height: 16,
+                  TextSpan(
+                    text:
+                        '\nCooking Delicious Recipes is now easier than ever. With RecipeX, you can find recipes from around the world, along with their ingredients, country of origin, and region. It\'s free and open source.',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
             ),
             Text(
               'A simple, yet powerful recipe app for everyone.',
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             Text(
               'Explore a collection of ${recipes.length} recipes from around the world. along with their ingredients, country of origin, and region. choose from a wide range of categories[${categories.length}] and ingredients[${ingredients.length}] to find the recipe you are looking for.',
@@ -103,7 +107,7 @@ class HomePage extends StatelessWidget {
                           color: Theme.of(context).colorScheme.primary,
                         ),
                   ),
-                  leading: Container(
+                  trailing: Container(
                     width: 16,
                     height: 16,
                     decoration: BoxDecoration(
@@ -215,7 +219,7 @@ class HomePage extends StatelessWidget {
                                                   ),
                                                 ),
                                                 ListTile(
-                                                  leading: Container(
+                                                  trailing: Container(
                                                     width: 16,
                                                     height: 16,
                                                     decoration: BoxDecoration(
@@ -444,7 +448,7 @@ class HomePage extends StatelessWidget {
                                                                       .bold,
                                                             ),
                                                       ),
-                                                      leading: Container(
+                                                      trailing: Container(
                                                         width: 16,
                                                         height: 16,
                                                         decoration:
@@ -774,7 +778,7 @@ class HomePage extends StatelessWidget {
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                           ),
-                          leading: Container(
+                          trailing: Container(
                             width: 16,
                             height: 16,
                             decoration: BoxDecoration(
@@ -891,7 +895,7 @@ class HomePage extends StatelessWidget {
                                                           ),
                                                         ),
                                                         ListTile(
-                                                          leading: Container(
+                                                          trailing: Container(
                                                             width: 16,
                                                             height: 16,
                                                             decoration:
@@ -1148,7 +1152,7 @@ class HomePage extends StatelessWidget {
                                                                               .bold,
                                                                     ),
                                                               ),
-                                                              leading:
+                                                              trailing:
                                                                   Container(
                                                                 width: 16,
                                                                 height: 16,
@@ -1422,7 +1426,100 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
+            Divider(
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              trailing: Icon(
+                Icons.info_outline,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              title: Text(
+                'Legal & Open Source Licenses',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              subtitle: Text(
+                'Legal & Open Source Licenses: RecipeX is based on data from CulinaryDB, which is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. RecipeX is licensed under MIT License.',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+              ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                'About',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => showAboutDialog(
+                context: context,
+                applicationName: 'RecipeX',
+                applicationVersion: '1.0.0',
+                applicationIcon: const FlutterLogo(),
+                applicationLegalese: '© 2021 Ravi Kovind',
+              ),
+            ),
 
+            /// liscence
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                'Liscence',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => showLicensePage(
+                context: context,
+                applicationName: 'RecipeX',
+                applicationVersion: '1.0.0',
+                applicationIcon: const FlutterLogo(),
+                applicationLegalese: '© 2021 Ravi Kovind',
+              ),
+            ),
+            if (!kIsWeb)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                onTap: () async {
+                  final uri =
+                      Uri.parse('https://ravikovind.github.io/recipe_x/');
+                  try {
+                    launchUrl(uri);
+                  } catch (e) {
+                    throw 'There was an error trying to launch the URL: $uri';
+                  }
+                },
+                title: Text(
+                  'Website : https://ravikovind.github.io/recipe_x/',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                subtitle: RichText(
+                  text: TextSpan(
+                    text: 'Web version of RecipeX',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios),
+              ),
+            const SizedBox(
+              height: 16,
+            ),
             RichText(
               text: TextSpan(
                 text: 'Main Data Source of RecipeX is : ',
@@ -1499,7 +1596,6 @@ class HomePage extends StatelessWidget {
                         final uri = Uri.parse(
                           'mailto:ravikumar2710999@gmail.com?subject=Issue%20in%20RecipeX&body=Hey%20There!%0A%3CPlease%20write%20issue%20here%3E',
                         );
-
                         try {
                           launchUrl(uri);
                         } catch (e) {
@@ -1514,73 +1610,6 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
-            ListTile(
-              title: Text(
-                'About',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () => showAboutDialog(
-                context: context,
-                applicationName: 'RecipeX',
-                applicationVersion: '1.0.0',
-                applicationIcon: const FlutterLogo(),
-                applicationLegalese: '© 2021 Ravi Kovind',
-              ),
-            ),
-
-            /// liscence
-            ListTile(
-              title: Text(
-                'Liscence',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () => showLicensePage(
-                context: context,
-                applicationName: 'RecipeX',
-                applicationVersion: '1.0.0',
-                applicationIcon: const FlutterLogo(),
-                applicationLegalese: '© 2021 Ravi Kovind',
-              ),
-            ),
-            if (!kIsWeb)
-              ListTile(
-                onTap: () async {
-                  final uri =
-                      Uri.parse('https://ravikovind.github.io/recipe_x/');
-                  try {
-                    launchUrl(uri);
-                  } catch (e) {
-                    throw 'There was an error trying to launch the URL: $uri';
-                  }
-                },
-                title: Text(
-                  'Website : https://ravikovind.github.io/recipe_x/',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                subtitle: RichText(
-                  text: TextSpan(
-                    text: 'Web version of RecipeX',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                  ),
-                ),
-                trailing: const Icon(Icons.arrow_forward_ios),
-              ),
           ],
         ),
       ),
