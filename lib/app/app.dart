@@ -93,12 +93,20 @@ class Application extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
+              appBarTheme: AppBarTheme(
+                titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
             darkTheme: ThemeData.dark().copyWith(
               colorScheme: darkColorScheme,
               useMaterial3: true,
               textTheme: GoogleFonts.nunitoSansTextTheme(
-                Theme.of(context).textTheme,
+                Theme.of(context).textTheme.apply(
+                      bodyColor: Theme.of(context).colorScheme.onBackground,
+                      displayColor: Theme.of(context).colorScheme.onBackground,
+                      decorationColor:
+                          Theme.of(context).colorScheme.onBackground,
+                    ),
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
@@ -112,6 +120,11 @@ class Application extends StatelessWidget {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
+              ),
+              appBarTheme: AppBarTheme(
+                titleTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
               ),
             ),
             routerConfig: AppRouter(

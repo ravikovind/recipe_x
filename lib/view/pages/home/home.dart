@@ -8,6 +8,7 @@ import 'package:recipe_x/bloc/country/country_bloc.dart';
 import 'package:recipe_x/bloc/ingredient/ingredient_bloc.dart';
 import 'package:recipe_x/bloc/recipe/recipe_bloc.dart';
 import 'package:recipe_x/bloc/region/region_bloc.dart';
+import 'package:recipe_x/bloc/theme/theme_bloc.dart';
 import 'package:recipe_x/core/routes/routes.dart';
 import 'package:recipe_x/core/utils/extenstions.dart';
 import 'package:recipe_x/data/entities/category.dart';
@@ -35,6 +36,16 @@ class HomePage extends StatelessWidget {
               context.goNamed(kFilterRoute);
             },
             icon: const Icon(Icons.filter_alt_sharp),
+          ),
+
+          /// theme
+          IconButton(
+            onPressed: () {
+              context.read<ThemeBloc>().add(
+                    const ToggleTheme(),
+                  );
+            },
+            icon: const Icon(Icons.brightness_4_outlined),
           ),
         ],
       ),
