@@ -73,60 +73,73 @@ class Application extends StatelessWidget {
           return MaterialApp.router(
             title: 'RecipeX',
             debugShowCheckedModeBanner: false,
-            themeMode: mode,
             theme: ThemeData(
               colorScheme: lightColorScheme,
+              brightness: Brightness.light,
               useMaterial3: true,
               textTheme: GoogleFonts.nunitoSansTextTheme(
                 Theme.of(context).textTheme,
               ),
+              appBarTheme: AppBarTheme(
+                titleTextStyle: GoogleFonts.nunitoSansTextTheme(
+                  Theme.of(context).textTheme,
+                ).titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 48),
+                  backgroundColor: lightColorScheme.onPrimaryContainer,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
+                  minimumSize: const Size(double.infinity, 64.0),
                 ),
               ),
               inputDecorationTheme: InputDecorationTheme(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.0),
                 ),
               ),
-              appBarTheme: AppBarTheme(
-                titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-              ),
             ),
-            darkTheme: ThemeData.dark().copyWith(
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
               colorScheme: darkColorScheme,
               useMaterial3: true,
               textTheme: GoogleFonts.nunitoSansTextTheme(
                 Theme.of(context).textTheme.apply(
-                      bodyColor: Theme.of(context).colorScheme.onBackground,
-                      displayColor: Theme.of(context).colorScheme.onBackground,
-                      decorationColor:
-                          Theme.of(context).colorScheme.onBackground,
+                      bodyColor: darkColorScheme.onBackground,
+                      displayColor: darkColorScheme.onBackground,
+                      decorationColor: darkColorScheme.onBackground,
+                    ),
+              ),
+              appBarTheme: AppBarTheme(
+                titleTextStyle: GoogleFonts.nunitoSansTextTheme(
+                  Theme.of(context).textTheme.apply(
+                        bodyColor: darkColorScheme.onBackground,
+                        displayColor: darkColorScheme.onBackground,
+                        decorationColor: darkColorScheme.onBackground,
+                      ),
+                ).titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
+                  minimumSize: const Size(double.infinity, 64.0),
+                  backgroundColor: darkColorScheme.onPrimaryContainer,
                 ),
               ),
               inputDecorationTheme: InputDecorationTheme(
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.0),
                 ),
               ),
-              appBarTheme: AppBarTheme(
-                titleTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
-              ),
             ),
+            themeMode: mode,
             routerConfig: AppRouter(
               observer: RouterObserver(),
             ).router,

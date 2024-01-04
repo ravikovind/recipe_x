@@ -25,7 +25,6 @@ class CategoryBloc extends HydratedBloc<CategoryEvent, CategoryState> {
       emit(state.copyWith(
           categories: categories, message: 'Categories Loaded Successfully'));
     } on Exception catch (_) {
-      print('\x1B[31mError Loading Categories : $_\x1B[0m');
       emit(state.copyWith(error: 'Error Loading Categories'));
     } finally {
       emit(state.copyWith(isBusy: false));

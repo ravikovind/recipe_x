@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:go_router/go_router.dart';
 import 'package:recipe_x/debug/application_bloc_observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,9 @@ import 'package:path_provider/path_provider.dart';
 Future<void> startApplication(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
+      /// [usePathUrlStrategy] is used to set the url path strategy of the application.
+  if (kIsWeb) usePathUrlStrategy();
+  if (kIsWeb) GoRouter.optionURLReflectsImperativeAPIs = true;
     /// user bloc observer to observe the state changes in the blocs and cubits
     Bloc.observer = ApplicationBlocObserver();
 

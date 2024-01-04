@@ -37,9 +37,6 @@ class _FilterPageState extends State<FilterPage> {
       if (controller.position.atEdge &&
           controller.position.pixels != 0 &&
           !context.read<RecipeBloc>().state.busy) {
-        print(
-          'at edge : ${controller.position} page: ${context.read<RecipeBloc>().state.page}',
-        );
         context.read<RecipeBloc>().add(
               FilterRecipes(
                 query: search.text,

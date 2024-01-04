@@ -7,7 +7,6 @@ class ApplicationBlocObserver extends BlocObserver {
   @override
   void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
     super.onError(bloc, error, stackTrace);
-    print('\x1B[31m$bloc has thrown an error $error\x1B[0m');
   }
 
   // @override

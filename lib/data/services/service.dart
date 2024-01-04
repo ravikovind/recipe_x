@@ -20,7 +20,6 @@ class Service {
           _computeRegions, await rootBundle.loadString('recipes/regions.json'));
       return result;
     } on Exception catch (_) {
-      print('\x1B[31mError Loading Regions : $_\x1B[0m');
       throw Exception('Regions not found!');
     }
   }
@@ -66,7 +65,6 @@ class Service {
           _computeRecipes, await rootBundle.loadString('recipes/recipes.json'));
       return result;
     } on Exception catch (_) {
-      print(_);
       throw Exception('Recipes not found!');
     }
   }

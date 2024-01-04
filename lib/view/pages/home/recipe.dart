@@ -49,7 +49,10 @@ class RecipePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(recipeOf.name?.capitalize ?? 'Recipe', maxLines: 2,),
+        title: Text(
+          recipeOf.name?.capitalize ?? 'Recipe',
+          maxLines: 2,
+        ),
 
         /// check out the recipe
         actions: [
@@ -67,7 +70,7 @@ class RecipePage extends StatelessWidget {
                   mode: LaunchMode.externalApplication,
                 );
               } catch (_) {
-                print(_);
+                
               }
             },
             icon: Icon(

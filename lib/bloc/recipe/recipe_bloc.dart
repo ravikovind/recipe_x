@@ -75,10 +75,6 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
         return Future<void>.value();
       }
 
-      print(
-        'page: ${state.page} || limit: ${state.limit} || query: ${event.query} || hasReachedMax: ${state.hasReachedMax}',
-      );
-
       if (state.hasReachedMax) {
         emit(
           state.copyWith(
@@ -105,8 +101,6 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
       }).toList();
 
       final filtered = result.skip(state.limit * state.page).take(state.limit);
-
-      print('result length: ${result.length}');
 
       emit(
         state.copyWith(

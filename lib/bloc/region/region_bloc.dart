@@ -30,7 +30,6 @@ class RegionBloc extends HydratedBloc<RegionEvent, RegionState> {
         ),
       );
     } on Exception catch (_) {
-      print('\x1B[31mError Loading Regions : $_\x1B[0m');
       emit(state.copyWith(error: 'Error Loading Regions'));
     } finally {
       emit(state.copyWith(busy: false));

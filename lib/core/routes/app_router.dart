@@ -59,7 +59,7 @@ class AppRouter {
 extension OfGoRouterState on GoRouterState {
   Widget get noMatch => const Scaffold(
         body: Center(
-          child: Text('I think you are lost!'),
+          child: Text('Buddy, Are you lost?'),
         ),
       );
 }
