@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.betterx.recipe_x",
+      "sha256_cert_fingerprints": [
+        "D9:96:CA:A6:D1:19:23:1C:48:DC:20:46:7D:0B:F9:25:16:82:81:4C:0C:B8:62:7C:A9:9B:27:5B:65:CC:F3:FA"
+      ]
+    }
+  }
+]
