@@ -18,6 +18,7 @@ import 'package:recipe_x/data/entities/region.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:vector_graphics/vector_graphics.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -39,8 +40,10 @@ class HomePage extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height * 0.25,
         alignment: Alignment.center,
-        child: SvgPicture.asset(
-          'assets/svgs/${index + 1}.svg',
+        child: SvgPicture(
+          AssetBytesLoader(
+            'assets/svgs/${index + 1}.svg.vec',
+          ),
           fit: BoxFit.fitWidth,
           clipBehavior: Clip.antiAlias,
         ),
@@ -1769,7 +1772,8 @@ class HomePage extends StatelessWidget {
                 children: [
                   /// illustrations are just for showcase, they don't represent the actual recipe, ingredients
                   TextSpan(
-                    text: 'Illustrations are just for showcase, they don\'t represent the actual recipe, ingredients etc.',
+                    text:
+                        'Illustrations are just for showcase, they don\'t represent the actual recipe, ingredients etc.',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(context).colorScheme.outline,
                           fontWeight: FontWeight.w200,
@@ -1850,7 +1854,6 @@ class HomePage extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
             ),
-
 
             // SizedBox(
             //   height: MediaQuery.of(context).size.height * 0.2,

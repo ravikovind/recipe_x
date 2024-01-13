@@ -69,9 +69,7 @@ class RecipePage extends StatelessWidget {
                   uri,
                   mode: LaunchMode.externalApplication,
                 );
-              } catch (_) {
-                
-              }
+              } catch (_) {}
             },
             icon: Icon(
               Icons.play_arrow_rounded,

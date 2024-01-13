@@ -83,7 +83,7 @@ class Application extends StatelessWidget {
               appBarTheme: AppBarTheme(
                 titleTextStyle: GoogleFonts.nunitoSansTextTheme(
                   Theme.of(context).textTheme,
-                ).headlineSmall?.copyWith(
+                ).titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: lightColorScheme.primary,
                     ),
@@ -121,7 +121,7 @@ class Application extends StatelessWidget {
                         displayColor: darkColorScheme.onBackground,
                         decorationColor: darkColorScheme.onBackground,
                       ),
-                ).headlineSmall?.copyWith(
+                ).titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: darkColorScheme.primary,
                       wordSpacing: 2.4,
