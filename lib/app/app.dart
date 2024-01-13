@@ -83,8 +83,9 @@ class Application extends StatelessWidget {
               appBarTheme: AppBarTheme(
                 titleTextStyle: GoogleFonts.nunitoSansTextTheme(
                   Theme.of(context).textTheme,
-                ).titleMedium?.copyWith(
+                ).headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: lightColorScheme.primary,
                     ),
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(
@@ -120,8 +121,11 @@ class Application extends StatelessWidget {
                         displayColor: darkColorScheme.onBackground,
                         decorationColor: darkColorScheme.onBackground,
                       ),
-                ).titleMedium?.copyWith(
+                ).headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: darkColorScheme.primary,
+                      wordSpacing: 2.4,
+                      letterSpacing: 2.4,
                     ),
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(

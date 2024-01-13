@@ -60,6 +60,7 @@ class _FilterPageState extends State<FilterPage> {
     final ingredients = context.watch<IngredientBloc>().state.ingredients;
     final categories = context.watch<CategoryBloc>().state.categories;
     final regions = context.watch<RegionBloc>().state.regions;
+
     /// veg ingredients only
     final veganIngredients =
         ingredients.where((element) => element.isVegan == true).toList();
@@ -113,322 +114,303 @@ class _FilterPageState extends State<FilterPage> {
             icon: const Icon(Icons.clear),
           ),
           IconButton(
-            onPressed: () {
-              /// show filter options sheet
-              showCupertinoModalPopup(
-                context: context,
-                builder: (context) => StatefulBuilder(builder: (context, set) {
-                  return Scaffold(
-                    appBar: AppBar(
-                      title: Text(
-                        'Filter Options',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              letterSpacing: 2.4,
-                              wordSpacing: 2.4,
-                              fontWeight: FontWeight.bold,
-                            ),
+            onPressed: () => showCupertinoModalPopup(
+              context: context,
+              builder: (context) => StatefulBuilder(builder: (context, set) {
+                return Scaffold(
+                  appBar: AppBar(
+                    title: const Text(
+                      'Filter Options',
+                    ),
+                  ),
+                  body: ListView(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          'Regions',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(
+                                letterSpacing: 2.4,
+                                wordSpacing: 2.4,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
                       ),
-                    ),
-                    body: ListView(
-                      children: [
-                        ListTile(
-                          title: Text(
-                            'Regions',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge
-                                ?.copyWith(
-                                  letterSpacing: 2.4,
-                                  wordSpacing: 2.4,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 64,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              ...regions.map(
-                                (e) => Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: ChoiceChip(
-                                    selected: selectedRegions.contains(e.id),
-                                    onSelected: (value) {
-                                      set(() {
-                                        if (selectedRegions.contains(e.id)) {
-                                          selectedRegions.remove(e.id);
-                                        } else {
-                                          selectedRegions.add(e.id ?? '');
-                                        }
-                                      });
-                                      context.read<RecipeBloc>().add(
-                                            FilterRecipes(
-                                              query: search.text,
-                                              refresh: true,
-                                              regions: selectedRegions,
-                                              ingredients: selectedIngredients,
-                                            ),
-                                          );
-                                    },
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.surface,
-                                    label: Text(
-                                      e.name ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall
-                                          ?.copyWith(
-                                            letterSpacing: 2.4,
-                                            wordSpacing: 2.4,
-                                            fontWeight: FontWeight.bold,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary,
+                      SizedBox(
+                        height: 64,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ...regions.map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ChoiceChip(
+                                  selected: selectedRegions.contains(e.id),
+                                  onSelected: (value) {
+                                    set(() {
+                                      if (selectedRegions.contains(e.id)) {
+                                        selectedRegions.remove(e.id);
+                                      } else {
+                                        selectedRegions.add(e.id ?? '');
+                                      }
+                                    });
+                                    context.read<RecipeBloc>().add(
+                                          FilterRecipes(
+                                            query: search.text,
+                                            refresh: true,
+                                            regions: selectedRegions,
+                                            ingredients: selectedIngredients,
                                           ),
-                                    ),
+                                        );
+                                  },
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.surface,
+                                  label: Text(
+                                    e.name ?? '',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          letterSpacing: 2.4,
+                                          wordSpacing: 2.4,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
+                      ),
 
-                        ListTile(
-                          title: Text(
-                            'Ingredients',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge
-                                ?.copyWith(
-                                  letterSpacing: 2.4,
-                                  wordSpacing: 2.4,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
+                      ListTile(
+                        title: Text(
+                          'Ingredients',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(
+                                letterSpacing: 2.4,
+                                wordSpacing: 2.4,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
+                      ),
 
-                        ///  ingredients vegan only
-                        ListTile(
-                          title: Text(
-                            'Vegan Ingredients',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  letterSpacing: 2.4,
-                                  wordSpacing: 2.4,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
+                      ///  ingredients vegan only
+                      ListTile(
+                        title: Text(
+                          'Vegan Ingredients',
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    letterSpacing: 2.4,
+                                    wordSpacing: 2.4,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
-                        SizedBox(
-                          height: 64,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              ...veganIngredients.map(
-                                (e) => Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: ChoiceChip(
-                                    selected: selectedIngredients
-                                        .any((element) => element == e.id),
-                                    onSelected: (value) {
-                                      set(() {
-                                        if (selectedIngredients
-                                            .contains(e.id)) {
-                                          selectedIngredients.remove(e.id);
-                                        } else {
-                                          selectedIngredients.add(e.id ?? '');
-                                        }
-                                      });
-                                      context.read<RecipeBloc>().add(
-                                            FilterRecipes(
-                                              query: search.text,
-                                              refresh: true,
-                                              regions: selectedRegions,
-                                              ingredients: selectedIngredients,
-                                            ),
-                                          );
-                                    },
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.surface,
-                                    label: Text(
-                                      e.name ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall
-                                          ?.copyWith(
-                                            letterSpacing: 2.4,
-                                            wordSpacing: 2.4,
-                                            fontWeight: FontWeight.bold,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                      ),
+                      SizedBox(
+                        height: 64,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ...veganIngredients.map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ChoiceChip(
+                                  selected: selectedIngredients
+                                      .any((element) => element == e.id),
+                                  onSelected: (value) {
+                                    set(() {
+                                      if (selectedIngredients.contains(e.id)) {
+                                        selectedIngredients.remove(e.id);
+                                      } else {
+                                        selectedIngredients.add(e.id ?? '');
+                                      }
+                                    });
+                                    context.read<RecipeBloc>().add(
+                                          FilterRecipes(
+                                            query: search.text,
+                                            refresh: true,
+                                            regions: selectedRegions,
+                                            ingredients: selectedIngredients,
                                           ),
-                                    ),
+                                        );
+                                  },
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.surface,
+                                  label: Text(
+                                    e.name ?? '',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          letterSpacing: 2.4,
+                                          wordSpacing: 2.4,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
+                      ),
 
-                        /// ingredients veg only
-                        ListTile(
-                          title: Text(
-                            'Veg Ingredients',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  letterSpacing: 2.4,
-                                  wordSpacing: 2.4,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
+                      /// ingredients veg only
+                      ListTile(
+                        title: Text(
+                          'Veg Ingredients',
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    letterSpacing: 2.4,
+                                    wordSpacing: 2.4,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
-                        SizedBox(
-                          height: 64,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              ...vegIngredients.map(
-                                (e) => Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: ChoiceChip(
-                                    selected: selectedIngredients
-                                        .any((element) => element == e.id),
-                                    onSelected: (value) {
-                                      set(() {
-                                        if (selectedIngredients
-                                            .contains(e.id)) {
-                                          selectedIngredients.remove(e.id);
-                                        } else {
-                                          selectedIngredients.add(e.id ?? '');
-                                        }
-                                      });
-                                      context.read<RecipeBloc>().add(
-                                            FilterRecipes(
-                                              query: search.text,
-                                              refresh: true,
-                                              regions: selectedRegions,
-                                              ingredients: selectedIngredients,
-                                            ),
-                                          );
-                                    },
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.surface,
-                                    label: Text(
-                                      e.name ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall
-                                          ?.copyWith(
-                                            letterSpacing: 2.4,
-                                            wordSpacing: 2.4,
-                                            fontWeight: FontWeight.bold,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                      ),
+                      SizedBox(
+                        height: 64,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ...vegIngredients.map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ChoiceChip(
+                                  selected: selectedIngredients
+                                      .any((element) => element == e.id),
+                                  onSelected: (value) {
+                                    set(() {
+                                      if (selectedIngredients.contains(e.id)) {
+                                        selectedIngredients.remove(e.id);
+                                      } else {
+                                        selectedIngredients.add(e.id ?? '');
+                                      }
+                                    });
+                                    context.read<RecipeBloc>().add(
+                                          FilterRecipes(
+                                            query: search.text,
+                                            refresh: true,
+                                            regions: selectedRegions,
+                                            ingredients: selectedIngredients,
                                           ),
-                                    ),
+                                        );
+                                  },
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.surface,
+                                  label: Text(
+                                    e.name ?? '',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          letterSpacing: 2.4,
+                                          wordSpacing: 2.4,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
+                      ),
 
-                        /// ingredients non-veg only
-                        ListTile(
-                          title: Text(
-                            'Non-Veg Ingredients',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  letterSpacing: 2.4,
-                                  wordSpacing: 2.4,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
+                      /// ingredients non-veg only
+                      ListTile(
+                        title: Text(
+                          'Non-Veg Ingredients',
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    letterSpacing: 2.4,
+                                    wordSpacing: 2.4,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
+                      ),
 
-                        SizedBox(
-                          height: 64,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              ...nonVegIngredients.map(
-                                (e) => Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: ChoiceChip(
-                                    selected: selectedIngredients
-                                        .any((element) => element == e.id),
-                                    onSelected: (value) {
-                                      set(() {
-                                        if (selectedIngredients
-                                            .contains(e.id)) {
-                                          selectedIngredients.remove(e.id);
-                                        } else {
-                                          selectedIngredients.add(e.id ?? '');
-                                        }
-                                      });
-                                      context.read<RecipeBloc>().add(
-                                            FilterRecipes(
-                                              query: search.text,
-                                              refresh: true,
-                                              regions: selectedRegions,
-                                              ingredients: selectedIngredients,
-                                            ),
-                                          );
-                                    },
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.surface,
-                                    label: Text(
-                                      e.name ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall
-                                          ?.copyWith(
-                                            letterSpacing: 2.4,
-                                            wordSpacing: 2.4,
-                                            fontWeight: FontWeight.bold,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                      SizedBox(
+                        height: 64,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ...nonVegIngredients.map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ChoiceChip(
+                                  selected: selectedIngredients
+                                      .any((element) => element == e.id),
+                                  onSelected: (value) {
+                                    set(() {
+                                      if (selectedIngredients.contains(e.id)) {
+                                        selectedIngredients.remove(e.id);
+                                      } else {
+                                        selectedIngredients.add(e.id ?? '');
+                                      }
+                                    });
+                                    context.read<RecipeBloc>().add(
+                                          FilterRecipes(
+                                            query: search.text,
+                                            refresh: true,
+                                            regions: selectedRegions,
+                                            ingredients: selectedIngredients,
                                           ),
-                                    ),
+                                        );
+                                  },
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.surface,
+                                  label: Text(
+                                    e.name ?? '',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                          letterSpacing: 2.4,
+                                          wordSpacing: 2.4,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
+                      ),
 
-                        /// choosiing one ingredient means it's vegan but recipe can have non-vegan ingredients
-                        ListTile(
-                          title: Text(
-                            'Choosiing one ingredient means it\'s vegan/veg/non-veg but recipe may have non-vegan/non-veg or veg/vegan ingredients, please check recipe details for more info!',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  letterSpacing: 2.4,
-                                  wordSpacing: 2.4,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.error,
-                                ),
-                          ),
+                      /// choosiing one ingredient means it's vegan but recipe can have non-vegan ingredients
+                      ListTile(
+                        title: Text(
+                          'Choosing one ingredient means it may be vegan/veg/non-veg but recipe may have non-vegan/non-veg or veg/vegan ingredients, please check recipe details for more info!',
+                          style:
+                              Theme.of(context).textTheme.labelLarge?.copyWith(
+                                    letterSpacing: 2.4,
+                                    wordSpacing: 2.4,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
                         ),
-                      ],
-                    ),
-                  );
-                }),
-              );
-            },
-            icon: const Icon(Icons.more),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ),
+            icon: const Icon(Icons.filter_alt_outlined),
           ),
         ],
       ),
@@ -568,15 +550,6 @@ class _FilterPageState extends State<FilterPage> {
                                                 appBar: AppBar(
                                                   title: Text(
                                                     ingredient.name ?? '',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelLarge
-                                                        ?.copyWith(
-                                                          letterSpacing: 2.4,
-                                                          wordSpacing: 2.4,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
                                                   ),
                                                 ),
                                                 body: SingleChildScrollView(
@@ -1141,8 +1114,16 @@ class _FilterPageState extends State<FilterPage> {
             );
           }
 
-          return const Center(
-            child: Text('Search amazing recipes here'),
+          return Center(
+            child: Text(
+              'Search amazing recipes here\nOr filter them by region, ingredients, etc.',
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    letterSpacing: 2.4,
+                    wordSpacing: 2.4,
+                    fontWeight: FontWeight.bold,
+                  ),
+              textAlign: TextAlign.center,
+            ),
           );
         },
       ),

@@ -7,7 +7,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 part 'theme_event.dart';
 
 class ThemeBloc extends HydratedBloc<ThemeEvent, ThemeMode> {
-  ThemeBloc() : super(ThemeMode.light) {
+  ThemeBloc() : super(ThemeMode.system) {
     on<ToggleTheme>(_onToggleTheme);
     on<SetTheme>(_onSetTheme);
   }

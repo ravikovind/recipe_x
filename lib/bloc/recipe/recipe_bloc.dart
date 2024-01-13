@@ -20,12 +20,22 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
 
   FutureOr<void> _onRecipeLoad(
       LoadRecipes event, Emitter<RecipeState> emit) async {
-    emit(state.copyWith(busy: true));
+    final old = state.recipes;
+    emit(state.copyWith(busy: true, recipes: <Recipe>[]));
+    if (event.refresh) {
+      /// suffling the recipes
+      return emit(
+        state.copyWith(
+          recipes: <Recipe>[...old]..shuffle(),
+          busy: false,
+        ),
+      );
+    }
     try {
       final result = await service.recipes();
       emit(
         state.copyWith(
-          recipes: [...result],
+          recipes: [...result]..shuffle(),
           message: 'Recipes Loaded Successfully',
         ),
       );

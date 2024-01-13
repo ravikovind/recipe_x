@@ -57,8 +57,11 @@ class AppRouter {
 }
 
 extension OfGoRouterState on GoRouterState {
-  Widget get noMatch => const Scaffold(
-        body: Center(
+  Widget get noMatch =>  Scaffold(
+        appBar: AppBar(
+          title: const Text('No Found'),
+        ),
+        body: const Center(
           child: Text('Buddy, Are you lost?'),
         ),
       );

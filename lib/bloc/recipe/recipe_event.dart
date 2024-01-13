@@ -7,7 +7,8 @@ abstract class RecipeEvent extends Equatable {
 }
 
 class LoadRecipes extends RecipeEvent {
-  const LoadRecipes();
+  const LoadRecipes({this.refresh = false});
+  final bool refresh;
 }
 
 class FilterRecipes extends RecipeEvent {
