@@ -428,6 +428,7 @@ class _FilterPageState extends State<FilterPage> {
           }
         },
         builder: (context, state) {
+          final random = state.randomRecipes;
           final recipes = state.filteredRecipes;
           final busy = state.busy;
 
@@ -1113,16 +1114,113 @@ class _FilterPageState extends State<FilterPage> {
               ],
             );
           }
-
           return Center(
-            child: Text(
-              'Search amazing recipes here\nOr filter them by region, ingredients, etc.',
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    letterSpacing: 2.4,
-                    wordSpacing: 2.4,
-                    fontWeight: FontWeight.bold,
+            child: Column(
+              children: [
+                const Icon(
+                  Icons.search,
+                  size: 128,
+                ),
+                Text(
+                  'Search amazing recipes here\nOr filter them by\nregion, ingredients, etc.',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        letterSpacing: 2.4,
+                        wordSpacing: 2.4,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                ListTile(
+                  title: Text(
+                    'Random Recipes from all over the world',
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                          letterSpacing: 2.4,
+                          wordSpacing: 2.4,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
-              textAlign: TextAlign.center,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: random.length,
+                    itemBuilder: (context, index) {
+                      final recipe = random[index];
+                      return ListTile(
+                        onTap: () {
+                          context.pushNamed(kRecipeRoute, pathParameters: {
+                            'recipe': recipe.id ?? '',
+                          });
+                        },
+                        leading: Container(
+                          width: 16,
+                          height: 16,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            padding: const EdgeInsets.all(2),
+                            margin: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: ingredients
+                                      .where((ingredient) =>
+                                          recipe.ingredients
+                                              ?.contains(ingredient.id) ==
+                                          true)
+                                      .every(
+                                          (element) => element.isVegan == true)
+                                  ? Colors.green
+                                  : ingredients
+                                          .where((ingredient) =>
+                                              recipe.ingredients
+                                                  ?.contains(ingredient.id) ==
+                                              true)
+                                          .every((element) =>
+                                              element.isVeg == true)
+                                      ? Colors.green
+                                      : Colors.red,
+                            ),
+                          ),
+                        ),
+                        title: Text(
+                          recipe.name?.capitalizeAll ?? '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                        subtitle: Wrap(
+                          children: [
+                            Text(
+                              recipe.description?.capitalizeAll ?? '',
+                              maxLines: 1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    letterSpacing: 2.4,
+                                    wordSpacing: 2.4,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           );
         },
