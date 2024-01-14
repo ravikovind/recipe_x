@@ -9,6 +9,15 @@ abstract class RecipeEvent extends Equatable {
 class LoadRecipes extends RecipeEvent {
   const LoadRecipes({this.refresh = false});
   final bool refresh;
+  @override
+  List<Object> get props => [refresh];
+}
+
+class LoadRandomRecipes extends RecipeEvent {
+  const LoadRandomRecipes({this.refresh = false});
+  final bool refresh;
+  @override
+  List<Object> get props => [refresh];
 }
 
 class FilterRecipes extends RecipeEvent {

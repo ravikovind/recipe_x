@@ -13,6 +13,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
     required this.service,
   }) : super(const RecipeState()) {
     on<LoadRecipes>(_onRecipeLoad);
+    on<LoadRandomRecipes>(_onRecipeLoadRandom);
     on<FilterRecipes>(_onRecipeFilter);
   }
 
@@ -20,17 +21,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
 
   FutureOr<void> _onRecipeLoad(
       LoadRecipes event, Emitter<RecipeState> emit) async {
-    final old = state.recipes;
-    emit(state.copyWith(busy: true, recipes: <Recipe>[]));
-    if (event.refresh) {
-      /// suffling the recipes
-      return emit(
-        state.copyWith(
-          recipes: <Recipe>[...old]..shuffle(),
-          busy: false,
-        ),
-      );
-    }
+    emit(state.copyWith(busy: true));
     try {
       final result = await service.recipes();
       emit(
@@ -39,11 +30,36 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
           message: 'Recipes Loaded Successfully',
         ),
       );
+      add(const LoadRandomRecipes());
     } on Exception catch (_) {
       emit(state.copyWith(error: 'Error Loading Recipes'));
     } finally {
       emit(state.copyWith(busy: false));
     }
+  }
+
+  FutureOr<void> _onRecipeLoadRandom(
+      LoadRandomRecipes event, Emitter<RecipeState> emit) async {
+    final old = state.recipes;
+    var svgs = state.svgs;
+    emit(
+      state.copyWith(
+        busy: true,
+        randomRecipes: <Recipe>[],
+        svgs: <String>[
+          ...svgs,
+        ]..shuffle(),
+      ),
+    );
+    await Future<void>.delayed(const Duration(milliseconds: 600));
+    final random = old.take(11).toList()..shuffle();
+    emit(
+      state.copyWith(
+        randomRecipes: random,
+        svgs: [...svgs]..shuffle(),
+        busy: false,
+      ),
+    );
   }
 
   FutureOr<void> _onRecipeFilter(
@@ -53,13 +69,25 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
       if (event.query.isEmpty &&
           event.ingredients.isEmpty &&
           event.regions.isEmpty) {
-        emit(state.copyWith(
-            filteredRecipes: <Recipe>[], page: 1, limit: 20, busy: false));
+        emit(
+          state.copyWith(
+            filteredRecipes: <Recipe>[],
+            page: 1,
+            limit: 20,
+            busy: false,
+          ),
+        );
         return Future<void>.value();
       }
 
       if (event.refresh) {
-        emit(state.copyWith(filteredRecipes: <Recipe>[], page: 1, limit: 20));
+        emit(
+          state.copyWith(
+            filteredRecipes: <Recipe>[],
+            page: 1,
+            limit: 20,
+          ),
+        );
 
         /// considering the search query is the recipe name
         final result = state.recipes.where((recipe) {

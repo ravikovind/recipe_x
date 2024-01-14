@@ -15,54 +15,55 @@ import 'package:recipe_x/core/utils/extenstions.dart';
 import 'package:recipe_x/core/utils/responsive.dart';
 // import 'package:recipe_x/data/entities/category.dart';
 import 'package:recipe_x/data/entities/region.dart';
+import 'package:recipe_x/view/widgets/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:vector_graphics/vector_graphics.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final tablet = medium(context);
     final desktop = expanded(context);
     final regions = context.watch<RegionBloc>().state.regions;
     // final countries = context.watch<CountryBloc>().state.countries;
-    final recipes = context.watch<RecipeBloc>().state.recipes;
-    final randomRecipes = recipes.take(11).toList();
-    final svgs = List.generate(
-      11,
-      (index) => Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant,
-        ),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.25,
-        alignment: Alignment.center,
-        child: SvgPicture(
-          AssetBytesLoader(
-            'assets/svgs/${index + 1}.svg.vec',
+    final recipesState = context.watch<RecipeBloc>().state;
+    final recipes = recipesState.randomRecipes;
+    final busy = recipesState.busy;
+    final svgs = recipesState.svgs;
+    final svgsAsWidget = svgs.map(
+      (svg) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceVariant,
           ),
-          fit: BoxFit.fitWidth,
-          clipBehavior: Clip.antiAlias,
-        ),
-      ),
-    )..shuffle();
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.25,
+          alignment: Alignment.center,
+          child: SvgPicture(
+            AssetBytesLoader(
+              svg,
+            ),
+            fit: BoxFit.fitWidth,
+            clipBehavior: Clip.antiAlias,
+          ),
+        );
+      },
+    ).toList();
     final ingredients = context.watch<IngredientBloc>().state.ingredients;
     // final categories = context.watch<CategoryBloc>().state.categories;
     return Scaffold(
       appBar: AppBar(
         title: const Text('RecipeX'),
         actions: [
-          /// search
-          // IconButton(
-          //   onPressed: () {
-          //     context.goNamed(kFilterRoute);
-          //   },
-          //   icon: const Icon(Icons.search),
-          // ),
-
           /// theme
           IconButton(
             onPressed: () {
@@ -127,14 +128,19 @@ class HomePage extends StatelessWidget {
                     ),
               ),
               trailing: IconButton(
-                onPressed: () {
-                  context.read<RecipeBloc>().add(
-                        const LoadRecipes(
-                          refresh: true,
-                        ),
-                      );
-                },
-                icon: const Icon(Icons.refresh),
+                onPressed: busy
+                    ? null
+                    : () {
+                        context.read<RecipeBloc>().add(
+                              const LoadRandomRecipes(
+                                refresh: true,
+                              ),
+                            );
+                      },
+                icon: Icon(
+                  Icons.refresh,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
             const SizedBox(
@@ -146,34 +152,37 @@ class HomePage extends StatelessWidget {
               alignment: WrapAlignment.center,
               runAlignment: WrapAlignment.center,
               children: [
-                ...randomRecipes.take(11).map(
-                  (recipe) {
-                    final index = randomRecipes.indexOf(recipe);
-                    final svg = svgs[index];
-                    // final recipeIngredients = ingredients
-                    //     .where((ingredient) =>
-                    //         recipe.ingredients?.contains(ingredient.id) == true)
-                    //     .toList();
-                    final region = regions.firstWhere(
-                      (element) => element.id == recipe.region,
-                      orElse: () => const Region(),
-                    );
-                    return SizedBox(
-                      width: desktop
-                          ? MediaQuery.of(context).size.width * 0.3
-                          : tablet
-                              ? MediaQuery.of(context).size.width * 0.45
-                              : MediaQuery.of(context).size.width,
-                      child: GestureDetector(
-                        onTap: () =>
-                            context.pushNamed(kRecipeRoute, pathParameters: {
-                          'recipe': recipe.id ?? '',
-                        }),
+                if (recipes.isEmpty && busy)
+                  ...List.generate(
+                    11,
+                    (index) => Shimmer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                        ),
+                        width: desktop
+                            ? MediaQuery.of(context).size.width * 0.3
+                            : tablet
+                                ? MediaQuery.of(context).size.width * 0.45
+                                : MediaQuery.of(context).size.width,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            svg,
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.25,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                              child: SvgPicture(
+                                AssetBytesLoader(
+                                  svgs[index],
+                                ),
+                                fit: BoxFit.fitWidth,
+                                clipBehavior: Clip.antiAlias,
+                              ),
+                            ),
                             ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: RichText(
@@ -181,8 +190,7 @@ class HomePage extends StatelessWidget {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: recipe.name?.capitalizeAll ??
-                                          'Recipe',
+                                      text: 'Recipe Loading...',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineMedium
@@ -194,26 +202,6 @@ class HomePage extends StatelessWidget {
                                             wordSpacing: 2.4,
                                             letterSpacing: 2.4,
                                           ),
-                                      children: [
-                                        TextSpan(
-                                          text:
-                                              ' (${region.name?.capitalizeAll})',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headlineSmall
-                                              ?.copyWith(
-                                                letterSpacing: 2.4,
-                                                wordSpacing: 2.4,
-                                                fontWeight: FontWeight.bold,
-                                                fontStyle: FontStyle.italic,
-                                                decorationStyle:
-                                                    TextDecorationStyle.solid,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                              ),
-                                        ),
-                                      ],
                                     ),
                                   ],
                                 ),
@@ -235,24 +223,9 @@ class HomePage extends StatelessWidget {
                                   margin: const EdgeInsets.all(2),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16),
-                                    color: ingredients
-                                            .where((ingredient) =>
-                                                recipe.ingredients
-                                                    ?.contains(ingredient.id) ==
-                                                true)
-                                            .every((element) =>
-                                                element.isVegan == true)
+                                    color: index % 2 == 0
                                         ? Colors.green
-                                        : ingredients
-                                                .where((ingredient) =>
-                                                    recipe.ingredients
-                                                        ?.contains(
-                                                            ingredient.id) ==
-                                                    true)
-                                                .every((element) =>
-                                                    element.isVeg == true)
-                                            ? Colors.green
-                                            : Colors.red,
+                                        : Colors.red,
                                   ),
                                 ),
                               ),
@@ -261,7 +234,7 @@ class HomePage extends StatelessWidget {
                                 runSpacing: 8,
                                 children: [
                                   Text(
-                                    recipe.description?.capitalizeAll ?? '',
+                                    'Loading some random recipes for you to explore...',
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall
@@ -271,599 +244,734 @@ class HomePage extends StatelessWidget {
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
-
-                                  /// ingredients
-                                  // ExpansionTile(
-                                  //   title: Text(
-                                  //     'Ingredients',
-                                  //     style: Theme.of(context)
-                                  //         .textTheme
-                                  //         .labelLarge
-                                  //         ?.copyWith(
-                                  //           letterSpacing: 2.4,
-                                  //           wordSpacing: 2.4,
-                                  //           fontWeight: FontWeight.bold,
-                                  //         ),
-                                  //   ),
-                                  //   trailing: const Icon(Icons.arrow_forward_ios),
-                                  //   childrenPadding: EdgeInsets.zero,
-                                  //   tilePadding: EdgeInsets.zero,
-                                  //   children: [
-                                  //     Wrap(
-                                  //       runSpacing: 2,
-                                  //       spacing: 2,
-                                  //       children: [
-                                  //         ...recipeIngredients.map(
-                                  //           (ingredient) {
-                                  //             final category =
-                                  //                 categories.firstWhere(
-                                  //               (element) =>
-                                  //                   element.id ==
-                                  //                   ingredient.category,
-                                  //               orElse: () => const Category(),
-                                  //             );
-                                  //             return RawChip(
-                                  //               onPressed: () {
-                                  //                 /// show ingredient details
-                                  //                 showCupertinoModalPopup(
-                                  //                   context: context,
-                                  //                   builder: (context) =>
-                                  //                       Scaffold(
-                                  //                     appBar: AppBar(
-                                  //                       title: Text(
-                                  //                         ingredient.name ?? '',
-                                  //                         style: Theme.of(context)
-                                  //                             .textTheme
-                                  //                             .labelLarge
-                                  //                             ?.copyWith(
-                                  //                               letterSpacing:
-                                  //                                   2.4,
-                                  //                               wordSpacing: 2.4,
-                                  //                               fontWeight:
-                                  //                                   FontWeight
-                                  //                                       .bold,
-                                  //                             ),
-                                  //                       ),
-                                  //                     ),
-                                  //                     body: SingleChildScrollView(
-                                  //                       child: Column(
-                                  //                         crossAxisAlignment:
-                                  //                             CrossAxisAlignment
-                                  //                                 .start,
-                                  //                         children: [
-                                  //                           ListTile(
-                                  //                             title: Text(
-                                  //                               'Ingredient Details',
-                                  //                               style: Theme.of(
-                                  //                                       context)
-                                  //                                   .textTheme
-                                  //                                   .labelLarge
-                                  //                                   ?.copyWith(
-                                  //                                     letterSpacing:
-                                  //                                         2.4,
-                                  //                                     wordSpacing:
-                                  //                                         2.4,
-                                  //                                     fontWeight:
-                                  //                                         FontWeight
-                                  //                                             .bold,
-                                  //                                   ),
-                                  //                             ),
-                                  //                           ),
-                                  //                           ListTile(
-                                  //                             trailing: Container(
-                                  //                               width: 16,
-                                  //                               height: 16,
-                                  //                               decoration:
-                                  //                                   BoxDecoration(
-                                  //                                 border:
-                                  //                                     Border.all(
-                                  //                                   width: 1,
-                                  //                                   color: Theme.of(
-                                  //                                           context)
-                                  //                                       .colorScheme
-                                  //                                       .onSurface,
-                                  //                                 ),
-                                  //                               ),
-                                  //                               child: Container(
-                                  //                                 width: 8,
-                                  //                                 height: 8,
-                                  //                                 margin:
-                                  //                                     const EdgeInsets
-                                  //                                         .all(2),
-                                  //                                 padding:
-                                  //                                     const EdgeInsets
-                                  //                                         .all(2),
-                                  //                                 decoration:
-                                  //                                     BoxDecoration(
-                                  //                                   shape: BoxShape
-                                  //                                       .circle,
-                                  //                                   color: ingredient
-                                  //                                               .isVegan ==
-                                  //                                           true
-                                  //                                       ? Colors
-                                  //                                           .green
-                                  //                                       : ingredient.isVeg ==
-                                  //                                               true
-                                  //                                           ? Colors
-                                  //                                               .green
-                                  //                                           : Colors
-                                  //                                               .red,
-                                  //                                 ),
-                                  //                               ),
-                                  //                             ),
-                                  //                             title: Text(
-                                  //                               '#${ingredient.name ?? ''}',
-                                  //                               style: Theme.of(
-                                  //                                       context)
-                                  //                                   .textTheme
-                                  //                                   .labelLarge
-                                  //                                   ?.copyWith(
-                                  //                                     letterSpacing:
-                                  //                                         2.4,
-                                  //                                     wordSpacing:
-                                  //                                         2.4,
-                                  //                                     fontWeight:
-                                  //                                         FontWeight
-                                  //                                             .bold,
-                                  //                                   ),
-                                  //                             ),
-                                  //                             dense: true,
-                                  //                           ),
-                                  //                           if (ingredient
-                                  //                                   .synonyms
-                                  //                                   ?.isNotEmpty ==
-                                  //                               true)
-                                  //                             ListTile(
-                                  //                               title: Text(
-                                  //                                 'Synonyms',
-                                  //                                 style: Theme.of(
-                                  //                                         context)
-                                  //                                     .textTheme
-                                  //                                     .labelLarge
-                                  //                                     ?.copyWith(
-                                  //                                       letterSpacing:
-                                  //                                           2.4,
-                                  //                                       wordSpacing:
-                                  //                                           2.4,
-                                  //                                       fontWeight:
-                                  //                                           FontWeight
-                                  //                                               .bold,
-                                  //                                     ),
-                                  //                               ),
-                                  //                             ),
-                                  //                           Padding(
-                                  //                             padding:
-                                  //                                 const EdgeInsets
-                                  //                                     .all(8.0),
-                                  //                             child: Wrap(
-                                  //                               spacing: 8,
-                                  //                               runSpacing: 8,
-                                  //                               alignment:
-                                  //                                   WrapAlignment
-                                  //                                       .start,
-                                  //                               crossAxisAlignment:
-                                  //                                   WrapCrossAlignment
-                                  //                                       .start,
-                                  //                               runAlignment:
-                                  //                                   WrapAlignment
-                                  //                                       .start,
-                                  //                               children: [
-                                  //                                 ...ingredient
-                                  //                                         .synonyms
-                                  //                                         ?.map(
-                                  //                                           (e) =>
-                                  //                                               Chip(
-                                  //                                             backgroundColor:
-                                  //                                                 Theme.of(context).colorScheme.surface,
-                                  //                                             label:
-                                  //                                                 Text(
-                                  //                                               e,
-                                  //                                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  //                                                     letterSpacing: 2.4,
-                                  //                                                     wordSpacing: 2.4,
-                                  //                                                     fontWeight: FontWeight.bold,
-                                  //                                                     color: Theme.of(context).colorScheme.tertiary,
-                                  //                                                   ),
-                                  //                                             ),
-                                  //                                           ),
-                                  //                                         )
-                                  //                                         .toList() ??
-                                  //                                     [],
-                                  //                               ],
-                                  //                             ),
-                                  //                           ),
-                                  //                           if (ingredient
-                                  //                                   .compounds
-                                  //                                   ?.isNotEmpty ==
-                                  //                               true)
-                                  //                             ListTile(
-                                  //                               title: Text(
-                                  //                                 'Compounds',
-                                  //                                 style: Theme.of(
-                                  //                                         context)
-                                  //                                     .textTheme
-                                  //                                     .labelLarge
-                                  //                                     ?.copyWith(
-                                  //                                       letterSpacing:
-                                  //                                           2.4,
-                                  //                                       wordSpacing:
-                                  //                                           2.4,
-                                  //                                       fontWeight:
-                                  //                                           FontWeight
-                                  //                                               .bold,
-                                  //                                     ),
-                                  //                               ),
-                                  //                             ),
-                                  //                           Padding(
-                                  //                             padding:
-                                  //                                 const EdgeInsets
-                                  //                                     .all(8.0),
-                                  //                             child: Wrap(
-                                  //                               spacing: 8,
-                                  //                               runSpacing: 8,
-                                  //                               alignment:
-                                  //                                   WrapAlignment
-                                  //                                       .start,
-                                  //                               crossAxisAlignment:
-                                  //                                   WrapCrossAlignment
-                                  //                                       .start,
-                                  //                               runAlignment:
-                                  //                                   WrapAlignment
-                                  //                                       .start,
-                                  //                               children: [
-                                  //                                 ...ingredient
-                                  //                                         .compounds
-                                  //                                         ?.map(
-                                  //                                           (e) =>
-                                  //                                               Chip(
-                                  //                                             backgroundColor:
-                                  //                                                 Theme.of(context).colorScheme.surface,
-                                  //                                             label:
-                                  //                                                 Text(
-                                  //                                               e,
-                                  //                                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  //                                                     letterSpacing: 2.4,
-                                  //                                                     wordSpacing: 2.4,
-                                  //                                                     fontWeight: FontWeight.bold,
-                                  //                                                     color: Theme.of(context).colorScheme.tertiary,
-                                  //                                                   ),
-                                  //                                             ),
-                                  //                                           ),
-                                  //                                         )
-                                  //                                         .toList() ??
-                                  //                                     [],
-                                  //                               ],
-                                  //                             ),
-                                  //                           ),
-                                  //                           ListTile(
-                                  //                             title: Text(
-                                  //                               'Type',
-                                  //                               style: Theme.of(
-                                  //                                       context)
-                                  //                                   .textTheme
-                                  //                                   .labelLarge
-                                  //                                   ?.copyWith(
-                                  //                                     letterSpacing:
-                                  //                                         2.4,
-                                  //                                     wordSpacing:
-                                  //                                         2.4,
-                                  //                                     fontWeight:
-                                  //                                         FontWeight
-                                  //                                             .bold,
-                                  //                                   ),
-                                  //                             ),
-                                  //                             subtitle: Text(
-                                  //                               ingredient.type ??
-                                  //                                   '',
-                                  //                               style: Theme.of(
-                                  //                                       context)
-                                  //                                   .textTheme
-                                  //                                   .labelLarge
-                                  //                                   ?.copyWith(
-                                  //                                     letterSpacing:
-                                  //                                         2.4,
-                                  //                                     wordSpacing:
-                                  //                                         2.4,
-                                  //                                     fontWeight:
-                                  //                                         FontWeight
-                                  //                                             .bold,
-                                  //                                   ),
-                                  //                             ),
-                                  //                           ),
-                                  //                           ExpansionTile(
-                                  //                             initiallyExpanded:
-                                  //                                 true,
-                                  //                             title: Text(
-                                  //                               'Categoriy Details',
-                                  //                               style: Theme.of(
-                                  //                                       context)
-                                  //                                   .textTheme
-                                  //                                   .labelLarge
-                                  //                                   ?.copyWith(
-                                  //                                     letterSpacing:
-                                  //                                         2.4,
-                                  //                                     wordSpacing:
-                                  //                                         2.4,
-                                  //                                     fontWeight:
-                                  //                                         FontWeight
-                                  //                                             .bold,
-                                  //                                   ),
-                                  //                             ),
-                                  //                             children: [
-                                  //                               ListTile(
-                                  //                                 title: Text(
-                                  //                                   'Category #${category.name ?? ''}',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                                 trailing:
-                                  //                                     Container(
-                                  //                                   width: 16,
-                                  //                                   height: 16,
-                                  //                                   decoration:
-                                  //                                       BoxDecoration(
-                                  //                                     border:
-                                  //                                         Border
-                                  //                                             .all(
-                                  //                                       width: 1,
-                                  //                                       color: Theme.of(
-                                  //                                               context)
-                                  //                                           .colorScheme
-                                  //                                           .onSurface,
-                                  //                                     ),
-                                  //                                   ),
-                                  //                                   child:
-                                  //                                       Container(
-                                  //                                     width: 8,
-                                  //                                     height: 8,
-                                  //                                     margin:
-                                  //                                         const EdgeInsets
-                                  //                                             .all(
-                                  //                                             2),
-                                  //                                     padding:
-                                  //                                         const EdgeInsets
-                                  //                                             .all(
-                                  //                                             2),
-                                  //                                     decoration:
-                                  //                                         BoxDecoration(
-                                  //                                       shape: BoxShape
-                                  //                                           .circle,
-                                  //                                       color: category.isVegan ==
-                                  //                                               true
-                                  //                                           ? Colors
-                                  //                                               .green
-                                  //                                           : category.isVeg == true
-                                  //                                               ? Colors.green
-                                  //                                               : Colors.red,
-                                  //                                     ),
-                                  //                                   ),
-                                  //                                 ),
-                                  //                               ),
-                                  //                               ListTile(
-                                  //                                 title: Text(
-                                  //                                   'Description',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                                 subtitle: Text(
-                                  //                                   category.description ??
-                                  //                                       '',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                               ),
-                                  //                               ListTile(
-                                  //                                 title: Text(
-                                  //                                   'Is Vegan',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                                 subtitle: Text(
-                                  //                                   category.isVegan ==
-                                  //                                           true
-                                  //                                       ? 'Yes'
-                                  //                                       : 'No',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                               ),
-                                  //                               ListTile(
-                                  //                                 title: Text(
-                                  //                                   'Is Veg',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                                 subtitle: Text(
-                                  //                                   category.isVeg ==
-                                  //                                           true
-                                  //                                       ? 'Yes'
-                                  //                                       : 'No',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                               ),
-
-                                  //                               /// culinaryUses
-                                  //                               ListTile(
-                                  //                                 title: Text(
-                                  //                                   'Culinary Uses',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                                 subtitle: Text(
-                                  //                                   category.culinaryUses ??
-                                  //                                       '',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                               ),
-
-                                  //                               /// safetyConsiderations
-                                  //                               ListTile(
-                                  //                                 title: Text(
-                                  //                                   'Safety Considerations',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                                 subtitle: Text(
-                                  //                                   category.safetyConsiderations ??
-                                  //                                       '',
-                                  //                                   style: Theme.of(
-                                  //                                           context)
-                                  //                                       .textTheme
-                                  //                                       .labelLarge
-                                  //                                       ?.copyWith(
-                                  //                                         letterSpacing:
-                                  //                                             2.4,
-                                  //                                         wordSpacing:
-                                  //                                             2.4,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                 ),
-                                  //                               ),
-                                  //                             ],
-                                  //                           ),
-                                  //                         ],
-                                  //                       ),
-                                  //                     ),
-                                  //                   ),
-                                  //                 );
-                                  //               },
-                                  //               backgroundColor: Theme.of(context)
-                                  //                   .colorScheme
-                                  //                   .onSurface,
-                                  //               label: Text(
-                                  //                 ingredient.name ?? '',
-                                  //                 style: Theme.of(context)
-                                  //                     .textTheme
-                                  //                     .labelSmall
-                                  //                     ?.copyWith(
-                                  //                       letterSpacing: 2.4,
-                                  //                       wordSpacing: 2.4,
-                                  //                       fontWeight:
-                                  //                           FontWeight.bold,
-                                  //                       color: Theme.of(context)
-                                  //                           .colorScheme
-                                  //                           .onError,
-                                  //                     ),
-                                  //               ),
-                                  //             );
-                                  //           },
-                                  //         ),
-                                  //       ],
-                                  //     )
-                                  //   ],
-                                  // )
                                 ],
                               ),
                             ),
                           ],
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  )
+                else
+                  ...recipes.map(
+                    (recipe) {
+                      final index = recipes.indexOf(recipe);
+                      final svg = svgsAsWidget[index];
+                      // final recipeIngredients = ingredients
+                      //     .where((ingredient) =>
+                      //         recipe.ingredients?.contains(ingredient.id) == true)
+                      //     .toList();
+                      final region = regions.firstWhere(
+                        (element) => element.id == recipe.region,
+                        orElse: () => const Region(),
+                      );
+                      return SizedBox(
+                        width: desktop
+                            ? MediaQuery.of(context).size.width * 0.3
+                            : tablet
+                                ? MediaQuery.of(context).size.width * 0.45
+                                : MediaQuery.of(context).size.width,
+                        child: GestureDetector(
+                          onTap: () =>
+                              context.pushNamed(kRecipeRoute, pathParameters: {
+                            'recipe': recipe.id ?? '',
+                          }),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              svg,
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: RichText(
+                                  textAlign: TextAlign.start,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: recipe.name?.capitalizeAll ??
+                                            'Recipe',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              wordSpacing: 2.4,
+                                              letterSpacing: 2.4,
+                                            ),
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                ' (${region.name?.capitalizeAll})',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall
+                                                ?.copyWith(
+                                                  letterSpacing: 2.4,
+                                                  wordSpacing: 2.4,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontStyle: FontStyle.italic,
+                                                  decorationStyle:
+                                                      TextDecorationStyle.solid,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                trailing: Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
+                                  ),
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    padding: const EdgeInsets.all(2),
+                                    margin: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: ingredients
+                                              .where((ingredient) =>
+                                                  recipe.ingredients?.contains(
+                                                      ingredient.id) ==
+                                                  true)
+                                              .every((element) =>
+                                                  element.isVegan == true)
+                                          ? Colors.green
+                                          : ingredients
+                                                  .where((ingredient) =>
+                                                      recipe.ingredients
+                                                          ?.contains(
+                                                              ingredient.id) ==
+                                                      true)
+                                                  .every((element) =>
+                                                      element.isVeg == true)
+                                              ? Colors.green
+                                              : Colors.red,
+                                    ),
+                                  ),
+                                ),
+                                subtitle: Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: [
+                                    Text(
+                                      recipe.description?.capitalizeAll ?? '',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall
+                                          ?.copyWith(
+                                            letterSpacing: 2.4,
+                                            wordSpacing: 2.4,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+
+                                    /// ingredients
+                                    // ExpansionTile(
+                                    //   title: Text(
+                                    //     'Ingredients',
+                                    //     style: Theme.of(context)
+                                    //         .textTheme
+                                    //         .labelLarge
+                                    //         ?.copyWith(
+                                    //           letterSpacing: 2.4,
+                                    //           wordSpacing: 2.4,
+                                    //           fontWeight: FontWeight.bold,
+                                    //         ),
+                                    //   ),
+                                    //   trailing: const Icon(Icons.arrow_forward_ios),
+                                    //   childrenPadding: EdgeInsets.zero,
+                                    //   tilePadding: EdgeInsets.zero,
+                                    //   children: [
+                                    //     Wrap(
+                                    //       runSpacing: 2,
+                                    //       spacing: 2,
+                                    //       children: [
+                                    //         ...recipeIngredients.map(
+                                    //           (ingredient) {
+                                    //             final category =
+                                    //                 categories.firstWhere(
+                                    //               (element) =>
+                                    //                   element.id ==
+                                    //                   ingredient.category,
+                                    //               orElse: () => const Category(),
+                                    //             );
+                                    //             return RawChip(
+                                    //               onPressed: () {
+                                    //                 /// show ingredient details
+                                    //                 showCupertinoModalPopup(
+                                    //                   context: context,
+                                    //                   builder: (context) =>
+                                    //                       Scaffold(
+                                    //                     appBar: AppBar(
+                                    //                       title: Text(
+                                    //                         ingredient.name ?? '',
+                                    //                         style: Theme.of(context)
+                                    //                             .textTheme
+                                    //                             .labelLarge
+                                    //                             ?.copyWith(
+                                    //                               letterSpacing:
+                                    //                                   2.4,
+                                    //                               wordSpacing: 2.4,
+                                    //                               fontWeight:
+                                    //                                   FontWeight
+                                    //                                       .bold,
+                                    //                             ),
+                                    //                       ),
+                                    //                     ),
+                                    //                     body: SingleChildScrollView(
+                                    //                       child: Column(
+                                    //                         crossAxisAlignment:
+                                    //                             CrossAxisAlignment
+                                    //                                 .start,
+                                    //                         children: [
+                                    //                           ListTile(
+                                    //                             title: Text(
+                                    //                               'Ingredient Details',
+                                    //                               style: Theme.of(
+                                    //                                       context)
+                                    //                                   .textTheme
+                                    //                                   .labelLarge
+                                    //                                   ?.copyWith(
+                                    //                                     letterSpacing:
+                                    //                                         2.4,
+                                    //                                     wordSpacing:
+                                    //                                         2.4,
+                                    //                                     fontWeight:
+                                    //                                         FontWeight
+                                    //                                             .bold,
+                                    //                                   ),
+                                    //                             ),
+                                    //                           ),
+                                    //                           ListTile(
+                                    //                             trailing: Container(
+                                    //                               width: 16,
+                                    //                               height: 16,
+                                    //                               decoration:
+                                    //                                   BoxDecoration(
+                                    //                                 border:
+                                    //                                     Border.all(
+                                    //                                   width: 1,
+                                    //                                   color: Theme.of(
+                                    //                                           context)
+                                    //                                       .colorScheme
+                                    //                                       .onSurface,
+                                    //                                 ),
+                                    //                               ),
+                                    //                               child: Container(
+                                    //                                 width: 8,
+                                    //                                 height: 8,
+                                    //                                 margin:
+                                    //                                     const EdgeInsets
+                                    //                                         .all(2),
+                                    //                                 padding:
+                                    //                                     const EdgeInsets
+                                    //                                         .all(2),
+                                    //                                 decoration:
+                                    //                                     BoxDecoration(
+                                    //                                   shape: BoxShape
+                                    //                                       .circle,
+                                    //                                   color: ingredient
+                                    //                                               .isVegan ==
+                                    //                                           true
+                                    //                                       ? Colors
+                                    //                                           .green
+                                    //                                       : ingredient.isVeg ==
+                                    //                                               true
+                                    //                                           ? Colors
+                                    //                                               .green
+                                    //                                           : Colors
+                                    //                                               .red,
+                                    //                                 ),
+                                    //                               ),
+                                    //                             ),
+                                    //                             title: Text(
+                                    //                               '#${ingredient.name ?? ''}',
+                                    //                               style: Theme.of(
+                                    //                                       context)
+                                    //                                   .textTheme
+                                    //                                   .labelLarge
+                                    //                                   ?.copyWith(
+                                    //                                     letterSpacing:
+                                    //                                         2.4,
+                                    //                                     wordSpacing:
+                                    //                                         2.4,
+                                    //                                     fontWeight:
+                                    //                                         FontWeight
+                                    //                                             .bold,
+                                    //                                   ),
+                                    //                             ),
+                                    //                             dense: true,
+                                    //                           ),
+                                    //                           if (ingredient
+                                    //                                   .synonyms
+                                    //                                   ?.isNotEmpty ==
+                                    //                               true)
+                                    //                             ListTile(
+                                    //                               title: Text(
+                                    //                                 'Synonyms',
+                                    //                                 style: Theme.of(
+                                    //                                         context)
+                                    //                                     .textTheme
+                                    //                                     .labelLarge
+                                    //                                     ?.copyWith(
+                                    //                                       letterSpacing:
+                                    //                                           2.4,
+                                    //                                       wordSpacing:
+                                    //                                           2.4,
+                                    //                                       fontWeight:
+                                    //                                           FontWeight
+                                    //                                               .bold,
+                                    //                                     ),
+                                    //                               ),
+                                    //                             ),
+                                    //                           Padding(
+                                    //                             padding:
+                                    //                                 const EdgeInsets
+                                    //                                     .all(8.0),
+                                    //                             child: Wrap(
+                                    //                               spacing: 8,
+                                    //                               runSpacing: 8,
+                                    //                               alignment:
+                                    //                                   WrapAlignment
+                                    //                                       .start,
+                                    //                               crossAxisAlignment:
+                                    //                                   WrapCrossAlignment
+                                    //                                       .start,
+                                    //                               runAlignment:
+                                    //                                   WrapAlignment
+                                    //                                       .start,
+                                    //                               children: [
+                                    //                                 ...ingredient
+                                    //                                         .synonyms
+                                    //                                         ?.map(
+                                    //                                           (e) =>
+                                    //                                               Chip(
+                                    //                                             backgroundColor:
+                                    //                                                 Theme.of(context).colorScheme.surface,
+                                    //                                             label:
+                                    //                                                 Text(
+                                    //                                               e,
+                                    //                                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    //                                                     letterSpacing: 2.4,
+                                    //                                                     wordSpacing: 2.4,
+                                    //                                                     fontWeight: FontWeight.bold,
+                                    //                                                     color: Theme.of(context).colorScheme.tertiary,
+                                    //                                                   ),
+                                    //                                             ),
+                                    //                                           ),
+                                    //                                         )
+                                    //                                         .toList() ??
+                                    //                                     [],
+                                    //                               ],
+                                    //                             ),
+                                    //                           ),
+                                    //                           if (ingredient
+                                    //                                   .compounds
+                                    //                                   ?.isNotEmpty ==
+                                    //                               true)
+                                    //                             ListTile(
+                                    //                               title: Text(
+                                    //                                 'Compounds',
+                                    //                                 style: Theme.of(
+                                    //                                         context)
+                                    //                                     .textTheme
+                                    //                                     .labelLarge
+                                    //                                     ?.copyWith(
+                                    //                                       letterSpacing:
+                                    //                                           2.4,
+                                    //                                       wordSpacing:
+                                    //                                           2.4,
+                                    //                                       fontWeight:
+                                    //                                           FontWeight
+                                    //                                               .bold,
+                                    //                                     ),
+                                    //                               ),
+                                    //                             ),
+                                    //                           Padding(
+                                    //                             padding:
+                                    //                                 const EdgeInsets
+                                    //                                     .all(8.0),
+                                    //                             child: Wrap(
+                                    //                               spacing: 8,
+                                    //                               runSpacing: 8,
+                                    //                               alignment:
+                                    //                                   WrapAlignment
+                                    //                                       .start,
+                                    //                               crossAxisAlignment:
+                                    //                                   WrapCrossAlignment
+                                    //                                       .start,
+                                    //                               runAlignment:
+                                    //                                   WrapAlignment
+                                    //                                       .start,
+                                    //                               children: [
+                                    //                                 ...ingredient
+                                    //                                         .compounds
+                                    //                                         ?.map(
+                                    //                                           (e) =>
+                                    //                                               Chip(
+                                    //                                             backgroundColor:
+                                    //                                                 Theme.of(context).colorScheme.surface,
+                                    //                                             label:
+                                    //                                                 Text(
+                                    //                                               e,
+                                    //                                               style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    //                                                     letterSpacing: 2.4,
+                                    //                                                     wordSpacing: 2.4,
+                                    //                                                     fontWeight: FontWeight.bold,
+                                    //                                                     color: Theme.of(context).colorScheme.tertiary,
+                                    //                                                   ),
+                                    //                                             ),
+                                    //                                           ),
+                                    //                                         )
+                                    //                                         .toList() ??
+                                    //                                     [],
+                                    //                               ],
+                                    //                             ),
+                                    //                           ),
+                                    //                           ListTile(
+                                    //                             title: Text(
+                                    //                               'Type',
+                                    //                               style: Theme.of(
+                                    //                                       context)
+                                    //                                   .textTheme
+                                    //                                   .labelLarge
+                                    //                                   ?.copyWith(
+                                    //                                     letterSpacing:
+                                    //                                         2.4,
+                                    //                                     wordSpacing:
+                                    //                                         2.4,
+                                    //                                     fontWeight:
+                                    //                                         FontWeight
+                                    //                                             .bold,
+                                    //                                   ),
+                                    //                             ),
+                                    //                             subtitle: Text(
+                                    //                               ingredient.type ??
+                                    //                                   '',
+                                    //                               style: Theme.of(
+                                    //                                       context)
+                                    //                                   .textTheme
+                                    //                                   .labelLarge
+                                    //                                   ?.copyWith(
+                                    //                                     letterSpacing:
+                                    //                                         2.4,
+                                    //                                     wordSpacing:
+                                    //                                         2.4,
+                                    //                                     fontWeight:
+                                    //                                         FontWeight
+                                    //                                             .bold,
+                                    //                                   ),
+                                    //                             ),
+                                    //                           ),
+                                    //                           ExpansionTile(
+                                    //                             initiallyExpanded:
+                                    //                                 true,
+                                    //                             title: Text(
+                                    //                               'Categoriy Details',
+                                    //                               style: Theme.of(
+                                    //                                       context)
+                                    //                                   .textTheme
+                                    //                                   .labelLarge
+                                    //                                   ?.copyWith(
+                                    //                                     letterSpacing:
+                                    //                                         2.4,
+                                    //                                     wordSpacing:
+                                    //                                         2.4,
+                                    //                                     fontWeight:
+                                    //                                         FontWeight
+                                    //                                             .bold,
+                                    //                                   ),
+                                    //                             ),
+                                    //                             children: [
+                                    //                               ListTile(
+                                    //                                 title: Text(
+                                    //                                   'Category #${category.name ?? ''}',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                                 trailing:
+                                    //                                     Container(
+                                    //                                   width: 16,
+                                    //                                   height: 16,
+                                    //                                   decoration:
+                                    //                                       BoxDecoration(
+                                    //                                     border:
+                                    //                                         Border
+                                    //                                             .all(
+                                    //                                       width: 1,
+                                    //                                       color: Theme.of(
+                                    //                                               context)
+                                    //                                           .colorScheme
+                                    //                                           .onSurface,
+                                    //                                     ),
+                                    //                                   ),
+                                    //                                   child:
+                                    //                                       Container(
+                                    //                                     width: 8,
+                                    //                                     height: 8,
+                                    //                                     margin:
+                                    //                                         const EdgeInsets
+                                    //                                             .all(
+                                    //                                             2),
+                                    //                                     padding:
+                                    //                                         const EdgeInsets
+                                    //                                             .all(
+                                    //                                             2),
+                                    //                                     decoration:
+                                    //                                         BoxDecoration(
+                                    //                                       shape: BoxShape
+                                    //                                           .circle,
+                                    //                                       color: category.isVegan ==
+                                    //                                               true
+                                    //                                           ? Colors
+                                    //                                               .green
+                                    //                                           : category.isVeg == true
+                                    //                                               ? Colors.green
+                                    //                                               : Colors.red,
+                                    //                                     ),
+                                    //                                   ),
+                                    //                                 ),
+                                    //                               ),
+                                    //                               ListTile(
+                                    //                                 title: Text(
+                                    //                                   'Description',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                                 subtitle: Text(
+                                    //                                   category.description ??
+                                    //                                       '',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                               ),
+                                    //                               ListTile(
+                                    //                                 title: Text(
+                                    //                                   'Is Vegan',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                                 subtitle: Text(
+                                    //                                   category.isVegan ==
+                                    //                                           true
+                                    //                                       ? 'Yes'
+                                    //                                       : 'No',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                               ),
+                                    //                               ListTile(
+                                    //                                 title: Text(
+                                    //                                   'Is Veg',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                                 subtitle: Text(
+                                    //                                   category.isVeg ==
+                                    //                                           true
+                                    //                                       ? 'Yes'
+                                    //                                       : 'No',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                               ),
+
+                                    //                               /// culinaryUses
+                                    //                               ListTile(
+                                    //                                 title: Text(
+                                    //                                   'Culinary Uses',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                                 subtitle: Text(
+                                    //                                   category.culinaryUses ??
+                                    //                                       '',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                               ),
+
+                                    //                               /// safetyConsiderations
+                                    //                               ListTile(
+                                    //                                 title: Text(
+                                    //                                   'Safety Considerations',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                                 subtitle: Text(
+                                    //                                   category.safetyConsiderations ??
+                                    //                                       '',
+                                    //                                   style: Theme.of(
+                                    //                                           context)
+                                    //                                       .textTheme
+                                    //                                       .labelLarge
+                                    //                                       ?.copyWith(
+                                    //                                         letterSpacing:
+                                    //                                             2.4,
+                                    //                                         wordSpacing:
+                                    //                                             2.4,
+                                    //                                         fontWeight:
+                                    //                                             FontWeight.bold,
+                                    //                                       ),
+                                    //                                 ),
+                                    //                               ),
+                                    //                             ],
+                                    //                           ),
+                                    //                         ],
+                                    //                       ),
+                                    //                     ),
+                                    //                   ),
+                                    //                 );
+                                    //               },
+                                    //               backgroundColor: Theme.of(context)
+                                    //                   .colorScheme
+                                    //                   .onSurface,
+                                    //               label: Text(
+                                    //                 ingredient.name ?? '',
+                                    //                 style: Theme.of(context)
+                                    //                     .textTheme
+                                    //                     .labelSmall
+                                    //                     ?.copyWith(
+                                    //                       letterSpacing: 2.4,
+                                    //                       wordSpacing: 2.4,
+                                    //                       fontWeight:
+                                    //                           FontWeight.bold,
+                                    //                       color: Theme.of(context)
+                                    //                           .colorScheme
+                                    //                           .onError,
+                                    //                     ),
+                                    //               ),
+                                    //             );
+                                    //           },
+                                    //         ),
+                                    //       ],
+                                    //     )
+                                    //   ],
+                                    // )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
               ],
             ),
 
@@ -1802,6 +1910,9 @@ class HomePage extends StatelessWidget {
                 // ],
               ),
             ),
+            const SizedBox(
+              height: 16,
+            ),
             ListTile(
               contentPadding: EdgeInsets.zero,
               onTap: () async {
@@ -1855,14 +1966,92 @@ class HomePage extends StatelessWidget {
               trailing: const Icon(Icons.arrow_forward_ios),
             ),
 
-            // SizedBox(
-            //   height: MediaQuery.of(context).size.height * 0.2,
-            //   child: ListWheelScrollView(
-            //     scrollBehavior: const ScrollBehavior(),
-            //     itemExtent: MediaQuery.of(context).size.height * 0.2,
-            //     children: [...svgs],
-            //   ),
-            // ),
+            /// contact us
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              onTap: () async {
+                final uri = Uri.parse(
+                  'https://ravikovind.github.io/',
+                );
+                try {
+                  await launchUrl(uri);
+                } catch (e) {
+                  throw 'There was an error trying to launch the URL: $uri';
+                }
+              },
+              title: Text(
+                'Contact Us',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              leading: Icon(
+                Icons.contact_mail,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+            ),
+
+            const SizedBox(
+              height: 32.0,
+            ),
+
+            /// Thank You
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: 'Thank You\n',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      letterSpacing: 2.4,
+                      wordSpacing: 2.4,
+                    ),
+                children: [
+                  TextSpan(
+                    text: 'Made with ',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2.4,
+                          wordSpacing: 2.4,
+                        ),
+                    children: [
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: Icon(
+                          Icons.favorite,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+
+                      /// Footbus Ltd
+                      /// A UK Company Reg No 12986850
+                      const TextSpan(
+                        text: ' in India🇮🇳\n',
+                      ),
+                      const TextSpan(
+                        text: 'by Team RecipeX',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16.0),
+
+            Text(
+              'RecipeX V(2.0.0)',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    letterSpacing: 2.4,
+                    wordSpacing: 2.4,
+                  ),
+            ),
+            const SizedBox(height: 64.0),
           ],
         ),
       ),
@@ -1893,3 +2082,4 @@ class HomePage extends StatelessWidget {
 //   @override
 //   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 // }
+

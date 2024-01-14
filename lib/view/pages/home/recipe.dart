@@ -20,9 +20,11 @@ class RecipePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final recipeOf = context.select<RecipeBloc, Recipe>(
       (recipeBloc) => recipeBloc.state.recipes.firstWhere(
-          (element) => element.id == recipe,
-          orElse: () => const Recipe()),
+        (element) => element.id == recipe,
+        orElse: () => const Recipe(),
+      ),
     );
+
     final regions = context.watch<RegionBloc>().state.regions;
     final countries = context.watch<CountryBloc>().state.countries;
     final ingredients = context.watch<IngredientBloc>().state.ingredients;
@@ -584,7 +586,7 @@ class RecipePage extends StatelessWidget {
                 ],
               )
             ],
-          )
+          ),
         ],
       ),
     );
