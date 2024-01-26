@@ -29,11 +29,11 @@ class CategoryState extends Equatable {
 
   /// fromJson
   factory CategoryState.fromJson(Map<String, dynamic> json) => CategoryState(
-        categories: List<Category>.from(json['CategoryState']
-                ?.map((x) => Category.fromJson(x)) ??
-            <Category>[]),
+        categories: List<Category>.from(
+            json['CategoryState']?.map((x) => Category.fromJson(x)) ??
+                <Category>[]),
       );
-  
+
   /// toJson
   Map<String, dynamic> toJson() => {
         'CategoryState': categories.map((x) => x.toJson()).toList(),

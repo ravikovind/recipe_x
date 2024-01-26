@@ -17,9 +17,10 @@ import 'package:path_provider/path_provider.dart';
 Future<void> startApplication(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-      /// [usePathUrlStrategy] is used to set the url path strategy of the application.
-  if (kIsWeb) usePathUrlStrategy();
-  if (kIsWeb) GoRouter.optionURLReflectsImperativeAPIs = true;
+    /// [usePathUrlStrategy] is used to set the url path strategy of the application.
+    if (kIsWeb) usePathUrlStrategy();
+    if (kIsWeb) GoRouter.optionURLReflectsImperativeAPIs = true;
+
     /// user bloc observer to observe the state changes in the blocs and cubits
     Bloc.observer = ApplicationBlocObserver();
 

@@ -8,4 +8,4 @@ sealed class IngredientEvent extends Equatable {
 
 class LoadIngredients extends IngredientEvent {
   const LoadIngredients();
-} 
+}

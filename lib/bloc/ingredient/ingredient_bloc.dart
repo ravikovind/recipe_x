@@ -22,7 +22,9 @@ class IngredientBloc extends HydratedBloc<IngredientEvent, IngredientState> {
     emit(state.copyWith(isBusy: true));
     try {
       final ingredients = await service.ingredients();
-      emit(state.copyWith(ingredients: ingredients, message: 'Ingredients Loaded Successfully'));
+      emit(state.copyWith(
+          ingredients: ingredients,
+          message: 'Ingredients Loaded Successfully'));
     } on Exception catch (_) {
       emit(state.copyWith(error: 'Error Loading Ingredients'));
     } finally {

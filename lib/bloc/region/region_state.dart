@@ -38,7 +38,6 @@ class RegionState extends Equatable {
         'RegionState': regions.map((x) => x.toJson()).toList(),
       };
 
-
   @override
   List<Object> get props => [busy, regions, error, message];
 }

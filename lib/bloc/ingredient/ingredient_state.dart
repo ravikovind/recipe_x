@@ -30,9 +30,9 @@ class IngredientState extends Equatable {
   /// fromJson
   factory IngredientState.fromJson(Map<String, dynamic> json) =>
       IngredientState(
-        ingredients: List<Ingredient>.from(json['IngredientState']
-                ?.map((x) => Ingredient.fromJson(x)) ??
-            <Ingredient>[]),
+        ingredients: List<Ingredient>.from(
+            json['IngredientState']?.map((x) => Ingredient.fromJson(x)) ??
+                <Ingredient>[]),
       );
 
   /// toJson
