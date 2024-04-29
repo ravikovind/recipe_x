@@ -14,6 +14,7 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
   }) : super(const RecipeState()) {
     on<LoadRecipes>(_onRecipeLoad);
     on<LoadRandomRecipes>(_onRecipeLoadRandom);
+    on<SelectRandomRecipe>(_onRecipeSelectRandom);
     on<FilterRecipes>(_onRecipeFilter);
   }
 
@@ -60,6 +61,14 @@ class RecipeBloc extends Bloc<RecipeEvent, RecipeState> {
         busy: false,
       ),
     );
+  }
+
+  FutureOr<void> _onRecipeSelectRandom(
+      SelectRandomRecipe event, Emitter<RecipeState> emit) async {
+    if (event.recipe.id == state.randomRecipe.id) {
+      return Future<void>.value();
+    }
+    emit(state.copyWith(randomRecipe: event.recipe));
   }
 
   FutureOr<void> _onRecipeFilter(

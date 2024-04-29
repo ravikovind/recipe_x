@@ -20,6 +20,13 @@ class LoadRandomRecipes extends RecipeEvent {
   List<Object> get props => [refresh];
 }
 
+class SelectRandomRecipe extends RecipeEvent {
+  const SelectRandomRecipe({required this.recipe});
+  final Recipe recipe;
+  @override
+  List<Object> get props => [recipe];
+}
+
 class FilterRecipes extends RecipeEvent {
   const FilterRecipes({
     this.query = '',

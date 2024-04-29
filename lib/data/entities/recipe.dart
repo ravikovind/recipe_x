@@ -36,8 +36,7 @@ class Recipe extends Equatable {
   final List<String>? ingredients;
 
   /// factory constructor to create a Recipe instance from a json of [Map] of [String] keys and [dynamic] values.
-  factory Recipe.fromJson(Map<String, dynamic> json) {
-    return Recipe(
+  factory Recipe.fromJson(Map<String, dynamic> json) => Recipe(
       id: json['_id']?['\$oid']?.toString(),
       name: json['name']?.toString(),
       description: json['description']?.toString(),
@@ -47,11 +46,9 @@ class Recipe extends Equatable {
           ?.map<String>((e) => e['\$oid'].toString())
           .toList(),
     );
-  }
 
   /// a method that converts a Recipe instance into a json of [Map] of [String] keys and [dynamic] values.
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       '_id': {'\$oid': id},
       'name': name,
       'description': description,
@@ -59,7 +56,6 @@ class Recipe extends Equatable {
       'region': {'\$oid': region},
       'ingredients': ingredients?.map((e) => {'\$oid': e}).toList(),
     };
-  }
 
   @override
   List<Object?> get props => [

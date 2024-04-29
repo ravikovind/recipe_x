@@ -70,3 +70,10 @@ class Region extends Equatable {
   @override
   List<Object?> get props => [id, name, countries, popularity];
 }
+
+
+/// ! --> we are 100% sure this not going to be null, ? not needed
+/// 
+/// "null" --> int.tryParse('${json['popularity']}') --> null
+/// "null" --> int.parse('${json['popularity']}') --> Exception
+/// "null" --> int.tryParse('${json['popularity']}') ?? 1 --> 1

@@ -4,9 +4,9 @@ import 'package:recipe_x/data/entities/category.dart';
 import 'package:recipe_x/data/entities/country.dart';
 import 'package:recipe_x/data/entities/ingredient.dart';
 import 'package:recipe_x/data/entities/recipe.dart';
+import 'package:recipe_x/data/entities/region.dart';
 
 import 'dart:convert' as convert;
-import 'package:recipe_x/data/entities/region.dart';
 
 class Service {
   /// regions : a list of regions.

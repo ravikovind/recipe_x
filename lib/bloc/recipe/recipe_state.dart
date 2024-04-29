@@ -5,6 +5,7 @@ class RecipeState extends Equatable {
     this.busy = false,
     this.recipes = const <Recipe>[],
     this.randomRecipes = const <Recipe>[],
+    this.randomRecipe = const Recipe(),
     this.svgs = svgsArray,
     this.error = '',
     this.message = '',
@@ -23,6 +24,10 @@ class RecipeState extends Equatable {
   /// randomRecipes is the list of recipes fetched from the database
   /// and shuffled
   final List<Recipe> randomRecipes;
+
+  /// randomRecipe is selected from the randomRecipes list
+  /// and displayed on the home page
+  final Recipe randomRecipe;
 
   /// svgs is just illustrations for random recipes
   final List<String> svgs;
@@ -49,6 +54,7 @@ class RecipeState extends Equatable {
     bool? busy,
     List<Recipe>? recipes,
     List<Recipe>? randomRecipes,
+    Recipe? randomRecipe,
     List<String>? svgs,
     String? error,
     String? message,
@@ -61,6 +67,7 @@ class RecipeState extends Equatable {
       busy: busy ?? this.busy,
       recipes: recipes ?? this.recipes,
       randomRecipes: randomRecipes ?? this.randomRecipes,
+      randomRecipe: randomRecipe ?? this.randomRecipe,
       svgs: svgs ?? this.svgs,
       error: error ?? this.error,
       message: message ?? this.message,
@@ -92,6 +99,7 @@ class RecipeState extends Equatable {
         busy,
         recipes,
         randomRecipes,
+        randomRecipe,
         svgs,
         error,
         message,

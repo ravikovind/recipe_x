@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'dart:async';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +34,10 @@ Future<void> startApplication(FutureOr<Widget> Function() builder) async {
 
     /// use the storage to initialize the HydratedBloc delegate
     HydratedBloc.storage = storage;
-  } catch (_) {}
+    print('Application initialized successfully! 🎉🎉🎉');
+  } catch (_) {
+    print('There was an error initializing the Application! 😢😢😢');
+  }
   final app = await builder();
   runApp(app);
 }

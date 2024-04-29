@@ -1,5 +1,5 @@
 name: recipe_x
-description: A application for recipes around the world.
+description: "RecipeX is a recipe app that allows users to search for recipes, view details, and save their favorite recipes."
 
 publish_to: "none"
 
@@ -14,16 +14,17 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
 
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.5
   equatable: ^2.0.5
-  flutter_bloc: ^8.1.3
-  go_router: ^11.1.0
-  hydrated_bloc: ^9.1.3
-  path_provider: ^2.0.15
-  google_fonts: ^5.1.0
-  url_launcher: ^6.1.12
-  flutter_svg: ^2.0.9
-  vector_graphics: ^1.1.9+2
+  flutter_bloc: ^8.1.5
+  go_router: ^14.0.0
+  hydrated_bloc: ^9.1.5
+  path_provider: ^2.1.3
+  google_fonts: ^6.2.1
+  url_launcher: ^6.2.6
+  flutter_svg: ^2.0.10+1
+  vector_graphics: ^1.1.11+1
+  adaptive_screen_utils: ^1.3.0
 
 dev_dependencies:
   flutter_test:

@@ -55,8 +55,6 @@ class RecipePage extends StatelessWidget {
           recipeOf.name?.capitalize ?? 'Recipe',
           maxLines: 2,
         ),
-
-        /// check out the recipe
         actions: [
           IconButton(
             onPressed: () async {
@@ -137,8 +135,6 @@ class RecipePage extends StatelessWidget {
               ],
             ),
           ),
-
-          /// region
           ListTile(
             title: Text(
               'It is a ${recipeRegion.name?.capitalizeAll ?? ''} recipe.',
@@ -299,7 +295,7 @@ class RecipePage extends StatelessWidget {
                                                 backgroundColor:
                                                     Theme.of(context)
                                                         .colorScheme
-                                                        .onSurface,
+                                                        .surfaceVariant,
                                                 label: Text(
                                                   e,
                                                   style: Theme.of(context)
@@ -310,9 +306,6 @@ class RecipePage extends StatelessWidget {
                                                         wordSpacing: 2.4,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .error,
                                                       ),
                                                 ),
                                               ),
@@ -351,7 +344,7 @@ class RecipePage extends StatelessWidget {
                                                 backgroundColor:
                                                     Theme.of(context)
                                                         .colorScheme
-                                                        .onSurface,
+                                                        .surfaceVariant,
                                                 label: Text(
                                                   e,
                                                   style: Theme.of(context)
@@ -523,8 +516,6 @@ class RecipePage extends StatelessWidget {
                                           ),
                                     ),
                                   ),
-
-                                  /// culinaryUses
                                   ListTile(
                                     title: Text(
                                       'Culinary Uses',
@@ -549,8 +540,6 @@ class RecipePage extends StatelessWidget {
                                           ),
                                     ),
                                   ),
-
-                                  /// safetyConsiderations
                                   ListTile(
                                     title: Text(
                                       'Safety Considerations',

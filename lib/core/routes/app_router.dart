@@ -1,5 +1,6 @@
 import 'package:recipe_x/core/routes/routes.dart';
 import 'package:recipe_x/debug/router_observer.dart';
+import 'package:recipe_x/view/pages/core/settings.dart';
 import 'package:recipe_x/view/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -19,7 +20,6 @@ class AppRouter {
           name: kHomeRoute,
           builder: (context, state) => const HomePage(),
           routes: [
-            /// search route
             GoRoute(
               path: kFilterRoute,
               name: kFilterRoute,
@@ -44,6 +44,11 @@ class AppRouter {
                   recipe: recipe,
                 );
               },
+            ),
+            GoRoute(
+              path: kSettingsRoute,
+              name: kSettingsRoute,
+              builder: (context, state) =>const SettingsPage()
             ),
           ],
         ),

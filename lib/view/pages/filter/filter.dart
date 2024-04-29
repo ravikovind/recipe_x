@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipe_x/bloc/category/category_bloc.dart';
-// import 'package:recipe_x/bloc/country/country_bloc.dart';
+
 import 'package:recipe_x/bloc/ingredient/ingredient_bloc.dart';
 import 'package:recipe_x/bloc/recipe/recipe_bloc.dart';
 import 'package:recipe_x/bloc/region/region_bloc.dart';
@@ -11,7 +11,6 @@ import 'package:recipe_x/core/routes/routes.dart';
 
 import 'package:recipe_x/core/utils/extenstions.dart';
 import 'package:recipe_x/data/entities/category.dart';
-// import 'package:recipe_x/data/entities/country.dart';
 
 class FilterPage extends StatefulWidget {
   const FilterPage({super.key});
@@ -61,16 +60,13 @@ class _FilterPageState extends State<FilterPage> {
     final categories = context.watch<CategoryBloc>().state.categories;
     final regions = context.watch<RegionBloc>().state.regions;
 
-    /// veg ingredients only
     final veganIngredients =
         ingredients.where((element) => element.isVegan == true).toList();
 
-    /// veg ingredients only
     final vegIngredients = ingredients
         .where((element) => element.isVeg == true && element.isVegan == false)
         .toList();
 
-    /// non-veg ingredients only
     final nonVegIngredients = ingredients
         .where((element) => element.isVegan == false && element.isVeg == false)
         .toList();
@@ -187,7 +183,6 @@ class _FilterPageState extends State<FilterPage> {
                           ],
                         ),
                       ),
-
                       ListTile(
                         title: Text(
                           'Ingredients',
@@ -201,8 +196,6 @@ class _FilterPageState extends State<FilterPage> {
                               ),
                         ),
                       ),
-
-                      ///  ingredients vegan only
                       ListTile(
                         title: Text(
                           'Vegan Ingredients',
@@ -264,8 +257,6 @@ class _FilterPageState extends State<FilterPage> {
                           ],
                         ),
                       ),
-
-                      /// ingredients veg only
                       ListTile(
                         title: Text(
                           'Veg Ingredients',
@@ -327,8 +318,6 @@ class _FilterPageState extends State<FilterPage> {
                           ],
                         ),
                       ),
-
-                      /// ingredients non-veg only
                       ListTile(
                         title: Text(
                           'Non-Veg Ingredients',
@@ -340,7 +329,6 @@ class _FilterPageState extends State<FilterPage> {
                                   ),
                         ),
                       ),
-
                       SizedBox(
                         height: 64,
                         child: ListView(
@@ -391,8 +379,6 @@ class _FilterPageState extends State<FilterPage> {
                           ],
                         ),
                       ),
-
-                      /// choosiing one ingredient means it's vegan but recipe can have non-vegan ingredients
                       ListTile(
                         title: Text(
                           'Choosing one ingredient means it may be vegan/veg/non-veg but recipe may have non-vegan/non-veg or veg/vegan ingredients, please check recipe details for more info!',
@@ -544,7 +530,6 @@ class _FilterPageState extends State<FilterPage> {
                                         );
                                         return RawChip(
                                           onPressed: () {
-                                            /// show ingredient details
                                             showCupertinoModalPopup(
                                               context: context,
                                               builder: (context) => Scaffold(
@@ -680,7 +665,7 @@ class _FilterPageState extends State<FilterPage> {
                                                                           Chip(
                                                                         backgroundColor: Theme.of(context)
                                                                             .colorScheme
-                                                                            .onSurface,
+                                                                            .surfaceVariant,
                                                                         label:
                                                                             Text(
                                                                           e,
@@ -746,7 +731,7 @@ class _FilterPageState extends State<FilterPage> {
                                                                           Chip(
                                                                         backgroundColor: Theme.of(context)
                                                                             .colorScheme
-                                                                            .onSurface,
+                                                                            .surfaceVariant,
                                                                         label:
                                                                             Text(
                                                                           e,
@@ -848,7 +833,7 @@ class _FilterPageState extends State<FilterPage> {
                                                                   color: Theme.of(
                                                                           context)
                                                                       .colorScheme
-                                                                      .onSurface,
+                                                                      .surfaceVariant,
                                                                 ),
                                                               ),
                                                               child: Container(
@@ -988,8 +973,6 @@ class _FilterPageState extends State<FilterPage> {
                                                                   ),
                                                             ),
                                                           ),
-
-                                                          /// culinaryUses
                                                           ListTile(
                                                             title: Text(
                                                               'Culinary Uses',
@@ -1025,8 +1008,6 @@ class _FilterPageState extends State<FilterPage> {
                                                                   ),
                                                             ),
                                                           ),
-
-                                                          /// safetyConsiderations
                                                           ListTile(
                                                             title: Text(
                                                               'Safety Considerations',
@@ -1072,7 +1053,7 @@ class _FilterPageState extends State<FilterPage> {
                                           },
                                           backgroundColor: Theme.of(context)
                                               .colorScheme
-                                              .onSurface,
+                                              .surfaceVariant,
                                           label: Text(
                                             ingredient.name ?? '',
                                             style: Theme.of(context)
@@ -1160,7 +1141,8 @@ class _FilterPageState extends State<FilterPage> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               width: 1,
-                              color: Theme.of(context).colorScheme.onSurface,
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
                             ),
                           ),
                           child: Container(
