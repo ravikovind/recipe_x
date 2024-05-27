@@ -1,3 +1,4 @@
+import 'package:adaptive_screen_utils/adaptive_screen_utils.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mobile = compact(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -149,7 +151,6 @@ class SettingsPage extends StatelessWidget {
             ),
             trailing: const Icon(Icons.arrow_forward_ios),
           ),
-
           ListTile(
             contentPadding: EdgeInsets.zero,
             onTap: () async {
@@ -226,6 +227,9 @@ class SettingsPage extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
             ),
+          const SizedBox(
+            height: 16,
+          ),
           ListTile(
             contentPadding: EdgeInsets.zero,
             trailing: Icon(
@@ -249,7 +253,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                 children: [
                   const TextSpan(
-                    text: ' You can find the source code here: ',
+                    text: '\nYou can find the source code here: ',
                   ),
                   WidgetSpan(
                     alignment: PlaceholderAlignment.middle,
@@ -274,72 +278,123 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(
-            height: 16,
-          ),
-          RichText(
-            text: TextSpan(
-              text: 'Main Data Source of RecipeX is : ',
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-              children: [
-                TextSpan(
-                  text: 'https://cosylab.iiitd.edu.in/culinarydb/',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      final uri = Uri.parse(
-                        'https://cosylab.iiitd.edu.in/culinarydb/',
-                      );
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: RichText(
+              textAlign: mobile ? TextAlign.start : TextAlign.center,
+              text: TextSpan(
+                text: 'Main Data Source of RecipeX is : ',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                children: [
+                  TextSpan(
+                    text: 'https://cosylab.iiitd.edu.in/culinarydb/',
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        final uri = Uri.parse(
+                          'https://cosylab.iiitd.edu.in/culinarydb/',
+                        );
 
-                      try {
-                        launchUrl(uri);
-                      } catch (e) {
-                        throw 'There was an error trying to launch the URL: $uri';
-                      }
-                    },
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.secondary,
+                        try {
+                          launchUrl(uri);
+                        } catch (e) {
+                          throw 'There was an error trying to launch the URL: $uri';
+                        }
+                      },
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                  ),
+                  const TextSpan(
+                    text: '.\n',
+                  ),
+                  TextSpan(
+                    text:
+                        'using above data, we have created a database for RecipeX, you can find it here : ',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                  ),
+                  TextSpan(
+                    text: 'Get RecipeX Database',
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        final uri = Uri.parse(
+                          'mailto:ravikumar2710999@gmail.com?subject=Please%20Share%20RecipeX%20DB&body=Hey%20There!%0A%3CPlease%20write%20your%20reason%20here%3E',
+                        );
+                        try {
+                          launchUrl(uri);
+                        } catch (e) {
+                          throw 'There was an error trying to launch the URL: $uri';
+                        }
+                      },
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                  const TextSpan(
+                    text: '.\n',
+                  ),
+                  TextSpan(
+                    text: 'For any queries, you can contact ',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                    children: [
+                      TextSpan(
+                        text: 'Dr. Ganesh Bagler',
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            final uri = Uri.parse(
+                              'mailto:bagler+CulinaryDB@iiitd.ac.in'
+                              '?subject=Query%20Regarding%20CulinaryDB&body=Hey%20There!%0A%3CPlease%20write%20your%20query%20here%3E',
+                            );
+                            try {
+                              launchUrl(uri);
+                            } catch (e) {
+                              throw 'There was an error trying to launch the URL: $uri';
+                            }
+                          },
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                       ),
-                ),
-                const TextSpan(
-                  text: '.\n',
-                ),
-                TextSpan(
-                  text:
-                      'using above data, we have created a database for RecipeX, you can find it here : ',
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.secondary,
+                      const TextSpan(
+                        text: '.\n',
                       ),
-                ),
-                TextSpan(
-                  text: 'Get RecipeX Database',
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      final uri = Uri.parse(
-                        'mailto:ravikumar2710999@gmail.com?subject=Please%20Share%20RecipeX%20DB&body=Hey%20There!%0A%3CPlease%20write%20your%20reason%20here%3E',
-                      );
-                      try {
-                        launchUrl(uri);
-                      } catch (e) {
-                        throw 'There was an error trying to launch the URL: $uri';
-                      }
-                    },
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
+                      TextSpan(
+                        text:
+                            'Center for Computational Biology\nIndraprastha Institute of Information Technology Delhi (IIIT Delhi),\nOkhla Phase III, Near Govindpuri Metro Station,\nNew Delhi, India 110020.\nEmail: bagler+CulinaryDB@iiitd.ac.in',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                       ),
-                ),
-              ],
+                      const TextSpan(
+                        text: '.\n',
+                      ),
+                      TextSpan(
+                        text: 'Tel: +91-11-26907-443 (Work)',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(
-            height: 16,
-          ),
           RichText(
+            textAlign: mobile ? TextAlign.start : TextAlign.center,
             text: TextSpan(
               text:
                   'Some of ingredients data is taken from AI, it may not be accurate. based on that, the app may not be accurate as well. if you find any mistakes, please report it.\ndeciding the recipe is going to be vegan or vegetarian is based on the ingredients, not the recipe itself. so, it may not be accurate. please check before cooking.\n\n',
@@ -365,7 +420,7 @@ class SettingsPage extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
           ),
           RichText(
@@ -373,7 +428,7 @@ class SettingsPage extends StatelessWidget {
             text: TextSpan(
               text: '© 2024 ',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     fontWeight: FontWeight.bold,
                   ),
               children: [

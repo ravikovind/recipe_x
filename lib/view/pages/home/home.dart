@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                 text: 'Thank You\n',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       letterSpacing: 2.4,
                       wordSpacing: 2.4,
                     ),
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                   TextSpan(
                     text: 'Made with ',
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 2.4,
                           wordSpacing: 2.4,
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                         text: ' in India🇮🇳 \n',
                       ),
                       const TextSpan(
-                        text: 'by Team RecipeX',
+                        text: 'by Ravi Kovind',
                       ),
                     ],
                   ),
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
             ),
             RichText(
@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
               text: TextSpan(
                 text: '© 2024 ',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.surfaceVariant,
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       fontWeight: FontWeight.bold,
                     ),
                 children: [
@@ -402,7 +402,7 @@ class _RandomRecipesState extends State<RandomRecipes>
                                 color: randomRecipe.id == recipe.id
                                     ? Theme.of(context)
                                         .colorScheme
-                                        .surfaceVariant
+                                        .surfaceContainerHighest
                                     : null,
                               ),
                               child: MouseRegion(

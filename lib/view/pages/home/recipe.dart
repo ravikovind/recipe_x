@@ -295,7 +295,7 @@ class RecipePage extends StatelessWidget {
                                                 backgroundColor:
                                                     Theme.of(context)
                                                         .colorScheme
-                                                        .surfaceVariant,
+                                                        .surfaceContainerHighest,
                                                 label: Text(
                                                   e,
                                                   style: Theme.of(context)
@@ -344,7 +344,7 @@ class RecipePage extends StatelessWidget {
                                                 backgroundColor:
                                                     Theme.of(context)
                                                         .colorScheme
-                                                        .surfaceVariant,
+                                                        .surfaceContainerHighest,
                                                 label: Text(
                                                   e,
                                                   style: Theme.of(context)

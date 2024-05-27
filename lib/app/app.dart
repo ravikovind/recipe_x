@@ -109,17 +109,17 @@ class Application extends StatelessWidget {
               useMaterial3: true,
               textTheme: GoogleFonts.nunitoSansTextTheme(
                 Theme.of(context).textTheme.apply(
-                      bodyColor: darkColorScheme.onBackground,
-                      displayColor: darkColorScheme.onBackground,
-                      decorationColor: darkColorScheme.onBackground,
+                      bodyColor: darkColorScheme.onSurface,
+                      displayColor: darkColorScheme.onSurface,
+                      decorationColor: darkColorScheme.onSurface,
                     ),
               ),
               appBarTheme: AppBarTheme(
                 titleTextStyle: GoogleFonts.nunitoSansTextTheme(
                   Theme.of(context).textTheme.apply(
-                        bodyColor: darkColorScheme.onBackground,
-                        displayColor: darkColorScheme.onBackground,
-                        decorationColor: darkColorScheme.onBackground,
+                        bodyColor: darkColorScheme.onSurface,
+                        displayColor: darkColorScheme.onSurface,
+                        decorationColor: darkColorScheme.onSurface,
                       ),
                 ).titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,

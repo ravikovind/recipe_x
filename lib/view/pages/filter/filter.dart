@@ -665,7 +665,7 @@ class _FilterPageState extends State<FilterPage> {
                                                                           Chip(
                                                                         backgroundColor: Theme.of(context)
                                                                             .colorScheme
-                                                                            .surfaceVariant,
+                                                                            .surfaceContainerHighest,
                                                                         label:
                                                                             Text(
                                                                           e,
@@ -731,7 +731,7 @@ class _FilterPageState extends State<FilterPage> {
                                                                           Chip(
                                                                         backgroundColor: Theme.of(context)
                                                                             .colorScheme
-                                                                            .surfaceVariant,
+                                                                            .surfaceContainerHighest,
                                                                         label:
                                                                             Text(
                                                                           e,
@@ -833,7 +833,7 @@ class _FilterPageState extends State<FilterPage> {
                                                                   color: Theme.of(
                                                                           context)
                                                                       .colorScheme
-                                                                      .surfaceVariant,
+                                                                      .surfaceContainerHighest,
                                                                 ),
                                                               ),
                                                               child: Container(
@@ -1053,7 +1053,7 @@ class _FilterPageState extends State<FilterPage> {
                                           },
                                           backgroundColor: Theme.of(context)
                                               .colorScheme
-                                              .surfaceVariant,
+                                              .surfaceContainerHighest,
                                           label: Text(
                                             ingredient.name ?? '',
                                             style: Theme.of(context)
@@ -1142,7 +1142,7 @@ class _FilterPageState extends State<FilterPage> {
                             border: Border.all(
                               width: 1,
                               color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
+                                  Theme.of(context).colorScheme.surfaceContainerHighest,
                             ),
                           ),
                           child: Container(
