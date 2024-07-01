@@ -77,11 +77,11 @@ class Application extends StatelessWidget {
               colorScheme: lightColorScheme,
               brightness: Brightness.light,
               useMaterial3: true,
-              textTheme: GoogleFonts.nunitoSansTextTheme(
+              textTheme: GoogleFonts.spaceMonoTextTheme(
                 Theme.of(context).textTheme,
               ),
               appBarTheme: AppBarTheme(
-                titleTextStyle: GoogleFonts.nunitoSansTextTheme(
+                titleTextStyle: GoogleFonts.spaceMonoTextTheme(
                   Theme.of(context).textTheme,
                 ).titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class Application extends StatelessWidget {
               brightness: Brightness.dark,
               colorScheme: darkColorScheme,
               useMaterial3: true,
-              textTheme: GoogleFonts.nunitoSansTextTheme(
+              textTheme: GoogleFonts.spaceMonoTextTheme(
                 Theme.of(context).textTheme.apply(
                       bodyColor: darkColorScheme.onSurface,
                       displayColor: darkColorScheme.onSurface,
@@ -115,7 +115,7 @@ class Application extends StatelessWidget {
                     ),
               ),
               appBarTheme: AppBarTheme(
-                titleTextStyle: GoogleFonts.nunitoSansTextTheme(
+                titleTextStyle: GoogleFonts.spaceMonoTextTheme(
                   Theme.of(context).textTheme.apply(
                         bodyColor: darkColorScheme.onSurface,
                         displayColor: darkColorScheme.onSurface,

@@ -58,12 +58,11 @@ class RecipePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () async {
-              final name = recipeOf.name?.replaceAll(' ', '+') ?? '';
-
-              final url = 'https://www.youtube.com/results?search_query=$name';
-
+              final source = recipeOf.source?.replaceAll(' ', '+') ?? 'recipe';
+              final name = recipeOf.name?.replaceAll(' ', '+') ?? 'recipe';
+              final query = '$name+by+$source';
+              final url = 'https://www.youtube.com/results?search_query=$query';
               final uri = Uri.parse(url);
-
               try {
                 await launchUrl(
                   uri,
@@ -292,10 +291,10 @@ class RecipePage extends StatelessWidget {
                                     ...ingredient.synonyms
                                             ?.map(
                                               (e) => Chip(
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceContainerHighest,
+                                                backgroundColor: Theme.of(
+                                                        context)
+                                                    .colorScheme
+                                                    .surfaceContainerHighest,
                                                 label: Text(
                                                   e,
                                                   style: Theme.of(context)
@@ -341,10 +340,10 @@ class RecipePage extends StatelessWidget {
                                     ...ingredient.compounds
                                             ?.map(
                                               (e) => Chip(
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceContainerHighest,
+                                                backgroundColor: Theme.of(
+                                                        context)
+                                                    .colorScheme
+                                                    .surfaceContainerHighest,
                                                 label: Text(
                                                   e,
                                                   style: Theme.of(context)
@@ -576,6 +575,52 @@ class RecipePage extends StatelessWidget {
               )
             ],
           ),
+          const SizedBox(height: 16),
+          if (recipeOf.source?.isNotEmpty == true)
+            ListTile(
+              title: Text(
+                'Source: ',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      letterSpacing: 2.4,
+                      wordSpacing: 2.4,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+              ),
+              subtitle: Wrap(
+                children: [
+                  Text(
+                    recipeOf.source ?? 'No Source Found',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          letterSpacing: 2.4,
+                          wordSpacing: 2.4,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                  ),
+                ],
+              ),
+              trailing: IconButton(
+                onPressed: () async {
+                  if (recipeOf.source?.isEmpty == true) return;
+                  final uri = Uri.parse(
+                    'https://google.com/search?q=${recipeOf.source}',
+                  );
+                  try {
+                    await launchUrl(
+                      uri,
+                      mode: LaunchMode.externalApplication,
+                    );
+                  } catch (_) {}
+                },
+                icon: Icon(
+                  Icons.open_in_new_rounded,
+                  color: Theme.of(context).colorScheme.error,
+                  size: 32,
+                ),
+              ),
+            ),
+
         ],
       ),
     );

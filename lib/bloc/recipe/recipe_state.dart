@@ -62,8 +62,8 @@ class RecipeState extends Equatable {
     int? page,
     List<Recipe>? filteredRecipes,
     bool? hasReachedMax,
-  }) {
-    return RecipeState(
+    (bool, bool, bool)? prefers,
+  }) => RecipeState(
       busy: busy ?? this.busy,
       recipes: recipes ?? this.recipes,
       randomRecipes: randomRecipes ?? this.randomRecipes,
@@ -76,7 +76,6 @@ class RecipeState extends Equatable {
       filteredRecipes: filteredRecipes ?? this.filteredRecipes,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
-  }
 
   /// fromJson
   factory RecipeState.fromJson(Map<String, dynamic> json) => RecipeState(
